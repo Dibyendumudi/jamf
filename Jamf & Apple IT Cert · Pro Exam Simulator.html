@@ -1,0 +1,1654 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jamf &amp; Apple IT Cert · Pro Exam Simulator</title>
+<!-- Added Phosphor Icons -->
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+
+:root{
+  color-scheme:dark;
+  --bg:#0F141B;
+  --panel:#171E27;
+  --panel-2:#1E2731;
+  --line:#2A3542;
+  --text:#E8ECF1;
+  --text-dim:#8D99AC;
+  --text-faint:#5C6A7E;
+  --accent-100:#45D0C4;
+  --accent-100-dim:rgba(69,208,196,.14);
+  --accent-200:#F2A93B;
+  --accent-200-dim:rgba(242,169,59,.14);
+  --accent-pro:#E8618C;
+  --accent-pro-dim:rgba(232,97,140,.14);
+  --accent-300:#38BDF8;
+  --accent-300-dim:rgba(56,189,248,.14);
+  --accent-400:#8B7FF0;
+  --accent-400-dim:rgba(139,127,240,.14);
+  --accent-500:#FF8A5C;
+  --accent-500-dim:rgba(255,138,92,.14);
+  --good:#4ADE80;
+  --good-dim:rgba(74,222,128,.14);
+  --bad:#F0665C;
+  --bad-dim:rgba(240,102,92,.14);
+  --info:#6C8EEF;
+  --radius:14px;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(69,208,196,.07), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 100% 0%, rgba(242,169,59,.06), transparent 55%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:20px 20px 60px;}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);margin-bottom:18px;flex-wrap:wrap;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.led{
+  width:9px;height:9px;border-radius:50%;background:var(--accent-pro);
+  box-shadow:0 0 0 0 rgba(232,97,140,.6);
+  animation:pulse 2.4s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(232,97,140,.55);}
+  70%{box-shadow:0 0 0 7px rgba(232,97,140,0);}
+  100%{box-shadow:0 0 0 0 rgba(232,97,140,0);}
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-title{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.3px;}
+.brand-sub{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:.5px;}
+
+.nav{display:flex;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:4px;}
+.nav button{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.4px;
+  padding:8px 14px;border-radius:7px;border:none;background:transparent;
+  color:var(--text-dim);cursor:pointer;transition:.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav button.active{background:var(--panel);color:var(--text);box-shadow:inset 0 0 0 1px var(--line);}
+.nav button:hover:not(.active){color:var(--text);}
+
+/* ---------- Layout & View Animations ---------- */
+.layout{display:grid;grid-template-columns:250px 1fr;gap:18px;align-items:start;}
+@media (max-width:820px){.layout{grid-template-columns:1fr;}}
+
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Glassmorphism Panel Upgrade */
+.card-panel {
+  background: rgba(23, 30, 39, 0.65); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(42, 53, 66, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.08); 
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Sidebar ---------- */
+.side-block{margin-bottom:20px;}
+.side-label{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;}
+
+.track-toggle{display:flex;flex-direction:column;gap:6px;}
+.track-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:9px;border:1px solid var(--line);
+  background:var(--panel-2);color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;
+  transition:.15s;
+}
+.track-btn .dot{width:7px;height:7px;border-radius:50%;}
+.track-btn[data-track="100"] .dot{background:var(--accent-100);}
+.track-btn[data-track="200"] .dot{background:var(--accent-200);}
+.track-btn[data-track="999"] .dot{background:var(--accent-pro);}
+.track-btn[data-track="300"] .dot{background:var(--accent-300);}
+.track-btn[data-track="400"] .dot{background:var(--accent-400);}
+.track-btn[data-track="500"] .dot{background:var(--accent-500);}
+.track-btn[data-track="all"] .dot{background:var(--info);}
+.track-btn.active{color:var(--text);border-color:currentColor;}
+.track-btn[data-track="100"].active{background:var(--accent-100-dim);border-color:var(--accent-100);}
+.track-btn[data-track="200"].active{background:var(--accent-200-dim);border-color:var(--accent-200);}
+.track-btn[data-track="999"].active{background:var(--accent-pro-dim);border-color:var(--accent-pro);}
+.track-btn[data-track="300"].active{background:var(--accent-300-dim);border-color:var(--accent-300);}
+.track-btn[data-track="400"].active{background:var(--accent-400-dim);border-color:var(--accent-400);}
+.track-btn[data-track="500"].active{background:var(--accent-500-dim);border-color:var(--accent-500);}
+.track-btn[data-track="all"].active{background:rgba(108,142,239,.14);border-color:var(--info);}
+
+.chip-list{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  font-size:11.5px;padding:6px 10px;border-radius:20px;border:1px solid var(--line);
+  background:var(--panel-2);color:var(--text-dim);cursor:pointer;transition:.15s;
+}
+.chip.active{background:var(--panel);color:var(--text);border-color:var(--text-dim);}
+
+.badge-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:4px;}
+.badge-ring{position:relative;width:104px;height:104px;}
+.badge-ring svg{transform:rotate(-90deg);}
+.badge-ring .bg-ring{fill:none;stroke:var(--line);stroke-width:8;}
+.badge-ring .fg-ring{fill:none;stroke:var(--info);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s ease;}
+.badge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.badge-pct{font-family:var(--font-display);font-weight:700;font-size:20px;}
+.badge-caption{font-family:var(--font-mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.5px;}
+.badge-sub{font-size:11px;color:var(--text-dim);text-align:center;}
+
+.reset-btn{
+  width:100%;margin-top:6px;padding:8px;font-size:11.5px;font-family:var(--font-mono);
+  background:transparent;border:1px solid var(--line);color:var(--text-faint);border-radius:8px;cursor:pointer;
+}
+.reset-btn:hover{color:var(--bad);border-color:var(--bad);}
+
+/* ---------- Plan panel ---------- */
+.plan-toggle{
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+  padding:12px 16px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;
+}
+.plan-toggle-title{font-family:var(--font-display);font-weight:600;font-size:13.5px;}
+.plan-toggle-arrow{color:var(--text-faint);transition:transform .2s;font-size:12px;}
+.plan-body{display:none;padding:4px 4px 14px;font-size:13px;color:var(--text-dim);line-height:1.65;}
+.plan-body.open{display:block;}
+.plan-body ol{margin:8px 0 0;padding-left:20px;}
+.plan-body li{margin-bottom:7px;}
+.plan-body b{color:var(--text);}
+.fact-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.fact-pill{font-family:var(--font-mono);font-size:10.5px;background:var(--panel);border:1px solid var(--line);padding:5px 9px;border-radius:7px;color:var(--text-dim);}
+
+/* ---------- Study stage ---------- */
+.stage-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.stage-counter{font-family:var(--font-mono);font-size:12px;color:var(--text-faint);}
+.stage-controls{display:flex;gap:8px;align-items:center;}
+.icon-btn{
+  background:var(--panel-2);border:1px solid var(--line);color:var(--text-dim);
+  padding:7px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-family:var(--font-mono);
+}
+.icon-btn.on{color:var(--accent-100);border-color:var(--accent-100);}
+.icon-btn:hover{color:var(--text);}
+
+.progressbar{height:4px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:22px;}
+.progressbar-fill{height:100%;background:linear-gradient(90deg,var(--accent-100),var(--accent-200));transition:width .3s;}
+
+/* Flashcard Upgrades */
+.flashcard-outer {
+  perspective: 1600px;
+  height: 300px;
+  margin-bottom: 20px;
+}
+.flashcard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  border-radius: 16px;
+}
+.flashcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px -10px rgba(69, 208, 196, 0.15);
+}
+.flashcard.flipped {
+  transform: rotateY(180deg);
+}
+.flashcard.flipped:hover {
+  transform: rotateY(180deg) translateY(-4px);
+}
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 26px 30px;
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  background-image: 
+    linear-gradient(160deg, var(--panel-2), var(--panel)),
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+}
+.face.back{transform:rotateY(180deg);}
+.face-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.tag-group{display:flex;gap:7px;align-items:center;}
+.exam-tag{font-family:var(--font-mono);font-size:10.5px;padding:4px 9px;border-radius:6px;font-weight:600;letter-spacing:.4px;}
+.exam-tag.t100{background:var(--accent-100-dim);color:var(--accent-100);}
+.exam-tag.t200{background:var(--accent-200-dim);color:var(--accent-200);}
+.exam-tag.t999{background:var(--accent-pro-dim);color:var(--accent-pro);}
+.exam-tag.t300{background:var(--accent-300-dim);color:var(--accent-300);}
+.exam-tag.t400{background:var(--accent-400-dim);color:var(--accent-400);}
+.exam-tag.t500{background:var(--accent-500-dim);color:var(--accent-500);}
+.topic-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);}
+.status-led{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.status-led.new{background:var(--text-faint);}
+.status-led.learning{background:var(--bad);}
+.status-led.known{background:var(--good);}
+.face-label{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.face-content{font-family:var(--font-display);font-size:19px;line-height:1.45;font-weight:600;flex:1;overflow:auto;}
+.face.back .face-content{font-family:var(--font-body);font-size:15.5px;font-weight:500;color:var(--text);}
+.face-hint{font-size:11px;color:var(--text-faint);text-align:center;margin-top:auto;padding-top:10px;}
+.face-note{font-size:12.5px;color:var(--text-dim);margin-top:10px;line-height:1.55;padding-top:10px;border-top:1px solid var(--line);}
+
+.mark-row{display:flex;gap:10px;margin-bottom:14px;}
+.mark-btn{
+  flex:1;padding:13px;border-radius:11px;border:1px solid var(--line);
+  font-family:var(--font-body);font-weight:600;font-size:13.5px;cursor:pointer;
+  background:var(--panel-2);color:var(--text-dim);transition:.15s;
+}
+.mark-btn.learning:hover{background:var(--bad-dim);color:var(--bad);border-color:var(--bad);}
+.mark-btn.known:hover{background:var(--good-dim);color:var(--good);border-color:var(--good);}
+
+.nav-row{display:flex;justify-content:space-between;gap:10px;}
+.nav-arrow{
+  background:transparent;border:1px solid var(--line);color:var(--text-dim);
+  padding:9px 16px;border-radius:9px;cursor:pointer;font-family:var(--font-mono);font-size:12px;
+}
+.nav-arrow:hover{color:var(--text);border-color:var(--text-dim);}
+.nav-arrow:disabled{opacity:.35;cursor:default;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-dim);}
+.empty-state b{color:var(--text);}
+
+/* ---------- Mock test ---------- */
+.mock-setup{text-align:center;padding:20px 10px 6px;}
+.mock-setup h3{font-family:var(--font-display);font-size:19px;margin:0 0 6px;}
+.mock-setup p{color:var(--text-dim);font-size:13.5px;max-width:440px;margin:0 auto 22px;line-height:1.6;}
+.setup-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.count-btn{
+  padding:9px 16px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);
+  color:var(--text-dim);cursor:pointer;font-family:var(--font-mono);font-size:12.5px;
+}
+.count-btn.active{color:var(--text);border-color:var(--accent-200);background:var(--accent-200-dim);}
+.start-btn{
+  padding:13px 30px;border-radius:11px;border:none;background:var(--accent-200);color:#1A1206;
+  font-weight:700;font-size:14px;cursor:pointer;font-family:var(--font-body);
+}
+.start-btn:hover{filter:brightness(1.08);}
+.start-btn:disabled{opacity:.4;cursor:default;}
+
+.mock-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.timer{font-family:var(--font-mono);font-size:13px;padding:6px 12px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line);}
+.timer.low{color:var(--bad);border-color:var(--bad);}
+.q-card{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:16px;}
+.q-text{font-family:var(--font-display);font-size:17px;font-weight:600;line-height:1.5;margin-bottom:18px;}
+.opt{
+  display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel);margin-bottom:9px;cursor:pointer;font-size:14px;transition:.12s;
+}
+.opt:hover{border-color:var(--text-dim);}
+.opt.selected{border-color:var(--info);background:rgba(108,142,239,.1);}
+.opt.correct{border-color:var(--good);background:var(--good-dim);}
+.opt.incorrect{border-color:var(--bad);background:var(--bad-dim);}
+.opt-letter{
+  width:22px;height:22px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;flex-shrink:0;
+}
+.mock-nav{display:flex;justify-content:space-between;gap:10px;}
+.submit-btn{
+  padding:12px 24px;border-radius:10px;border:none;background:var(--good);color:#0A2110;
+  font-weight:700;cursor:pointer;font-family:var(--font-body);font-size:13.5px;
+}
+
+.results-head{text-align:center;padding:8px 0 22px;}
+.score-big{font-family:var(--font-display);font-size:44px;font-weight:700;}
+.score-big.pass{color:var(--good);}
+.score-big.fail{color:var(--bad);}
+.results-sub{color:var(--text-dim);font-size:13.5px;margin-top:4px;}
+.topic-breakdown{display:flex;flex-direction:column;gap:10px;margin:18px 0 22px;}
+.tb-row{display:flex;align-items:center;gap:10px;font-size:12.5px;}
+.tb-label{width:220px;flex-shrink:0;color:var(--text-dim);display:flex;align-items:center;flex-wrap:wrap;gap:4px;}
+.tb-bar{flex:1;height:7px;background:var(--panel-2);border-radius:4px;overflow:hidden;}
+.tb-fill{height:100%;background:var(--accent-100);}
+.tb-frac{font-family:var(--font-mono);width:44px;text-align:right;color:var(--text-faint);}
+.review-item{padding:14px 16px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--panel-2);}
+.review-q{font-size:13.5px;font-weight:600;margin-bottom:6px;}
+.review-a{font-size:12.5px;color:var(--text-dim);}
+.review-a.wrong-line{color:var(--bad);}
+.review-a.right-line{color:var(--good);}
+
+/* ---------- Progress Rings & Enhanced History ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+@media (max-width:600px){.stat-grid{grid-template-columns:1fr 1fr;}}
+.stat-box{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;}
+.stat-num{font-family:var(--font-display);font-size:26px;font-weight:700;}
+.stat-label{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:.5px;margin-top:4px;}
+.section-title{font-family:var(--font-display);font-size:14px;font-weight:600;margin:22px 0 12px;color:var(--text-dim);}
+
+.mini-ring {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+.mini-ring svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+.mini-ring circle {
+  fill: none;
+  stroke-width: 3.5;
+}
+.mini-ring .bg { stroke: var(--panel); }
+.mini-ring .fg { transition: stroke-dashoffset 0.8s ease-in-out; }
+.mini-ring .fg.pass { stroke: var(--good); }
+.mini-ring .fg.fail { stroke: var(--bad); }
+.mini-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(30, 39, 49, 0.4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.history-item:hover {
+  background: var(--panel-2);
+  border-color: var(--text-faint);
+}
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.history-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text);
+}
+.history-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.history-score-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.h-status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Labs ---------- */
+.lab-intro{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px;font-size:13px;color:var(--text-dim);line-height:1.6;}
+.lab-intro b{color:var(--text);}
+.lab-grid{display:flex;flex-direction:column;gap:10px;}
+.lab-card{
+  display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;
+  border:1px solid var(--line);background:var(--panel-2);cursor:pointer;transition:.15s;
+}
+.lab-card:hover{border-color:var(--accent-200);}
+.lab-num{
+  font-family:var(--font-mono);font-size:13px;color:var(--accent-200);width:30px;flex-shrink:0;
+  border:1px solid var(--line);border-radius:8px;height:30px;display:flex;align-items:center;justify-content:center;
+}
+.lab-info{flex:1;min-width:0;}
+.lab-title{font-family:var(--font-display);font-weight:600;font-size:14.5px;margin-bottom:3px;}
+.lab-meta{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);}
+.lab-mini-bar{width:70px;height:5px;border-radius:3px;background:var(--line);overflow:hidden;flex-shrink:0;}
+.lab-mini-fill{height:100%;background:var(--accent-200);}
+.lab-pct{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);width:34px;text-align:right;flex-shrink:0;}
+
+.lab-back{background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;margin-bottom:16px;}
+.lab-back:hover{color:var(--text);}
+.lab-detail-head{margin-bottom:18px;}
+.lab-detail-title{font-family:var(--font-display);font-size:21px;font-weight:700;margin-bottom:6px;}
+.lab-detail-obj{font-size:13.5px;color:var(--text-dim);line-height:1.6;}
+.lab-section-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--accent-200);margin:22px 0 10px;}
+.prereq-list{font-size:13px;color:var(--text-dim);line-height:1.7;padding-left:18px;margin:0;}
+.step-item{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--line);background:var(--panel-2);margin-bottom:8px;cursor:pointer;
+}
+.step-item.done{border-color:var(--good);background:var(--good-dim);}
+.step-check{
+  width:19px;height:19px;border-radius:6px;border:1px solid var(--text-faint);flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;
+}
+.step-item.done .step-check{background:var(--good);border-color:var(--good);color:#0A2110;}
+.step-text{font-size:13.5px;line-height:1.55;}
+.step-text.done-text{color:var(--text-dim);text-decoration:line-through;text-decoration-color:var(--text-faint);}
+.verify-box{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.25);border-radius:10px;padding:14px 16px;margin-top:6px;}
+.verify-box ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--text-dim);line-height:1.7;}
+.verify-box .vb-title{font-family:var(--font-mono);font-size:11px;color:var(--good);letter-spacing:.5px;}
+.challenge-box{background:rgba(242,169,59,.06);border:1px solid rgba(242,169,59,.25);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:13px;color:var(--text-dim);line-height:1.6;}
+.challenge-box .cb-title{font-family:var(--font-mono);font-size:11px;color:var(--accent-200);letter-spacing:.5px;display:block;margin-bottom:6px;}
+.selfcheck-item{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.sc-q{padding:12px 15px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--panel-2);display:flex;justify-content:space-between;align-items:center;}
+.sc-a{padding:0 15px;font-size:13px;color:var(--text-dim);line-height:1.6;max-height:0;overflow:hidden;transition:.2s;}
+.sc-a.open{padding:12px 15px;max-height:200px;}
+.lab-progress-top{height:4px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:20px;}
+.lab-progress-top-fill{height:100%;background:var(--accent-200);transition:width .3s;}
+
+::selection{background:var(--accent-200);color:#1a1206;}
+</style>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="led"></span>
+      <div class="brand-text">
+        <span class="brand-title">JAMF + APPLE IT PREP CONSOLE</span>
+        <span class="brand-sub">JAMF 100/200/PRO — SUP/DEP-2026 — SVC-19A</span>
+      </div>
+    </div>
+    <div class="nav">
+      <!-- Added Phosphor Icons to navigation -->
+      <button data-mode="study" class="active"><i class="ph ph-cards"></i> Study</button>
+      <button data-mode="labs"><i class="ph ph-flask"></i> Hands-On Labs</button>
+      <button data-mode="mock"><i class="ph ph-exam"></i> Mock Test</button>
+      <button data-mode="progress"><i class="ph ph-chart-line-up"></i> Progress</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="card-panel">
+      <div class="side-block">
+        <div class="side-label">Track</div>
+        <div class="track-toggle">
+          <button class="track-btn active" data-track="all"><span>All tracks</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="100"><span>Jamf 100 · Associate</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="200"><span>Jamf 200 · Tech</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="999"><span>Pro Tier · 2026 DDM</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="300"><span>Device Support · SUP-2026</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="400"><span>Deployment &amp; Mgmt · DEP-2026</span><span class="dot"></span></button>
+          <button class="track-btn" data-track="500"><span>Service Fundamentals · SVC-19A</span><span class="dot"></span></button>
+        </div>
+      </div>
+      <div class="side-block">
+        <div class="side-label">Topics</div>
+        <div class="chip-list" id="chipList"></div>
+      </div>
+      <div class="side-block">
+        <div class="side-label">Mastery</div>
+        <div class="badge-wrap">
+          <div class="badge-ring">
+            <svg width="104" height="104" viewBox="0 0 104 104">
+              <circle class="bg-ring" cx="52" cy="52" r="44"></circle>
+              <circle class="fg-ring" id="ringFill" cx="52" cy="52" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"></circle>
+            </svg>
+            <div class="badge-center">
+              <div class="badge-pct" id="ringPct">0%</div>
+              <div class="badge-caption">KNOWN</div>
+            </div>
+          </div>
+          <div class="badge-sub" id="ringSub">0 of 0 cards mastered</div>
+        </div>
+        <button class="reset-btn" id="resetBtn">Reset all progress</button>
+      </div>
+    </div>
+
+    <!-- STAGE -->
+    <div class="card-panel animate-in" id="stage">
+      <!-- injected per mode -->
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const DATA = [
+// ---------------- JAMF 100 ----------------
+{id:"j100-1",exam:100,topic:"Fundamentals",q:"What Apple service does Jamf Pro rely on to push MDM commands to a device?",options:["Apple Push Notification service (APNs)","iCloud Relay","Bonjour discovery","TestFlight"],note:"Jamf Pro holds an APNs certificate that 'wakes' a device and delivers MDM commands over Apple's push network."},
+{id:"j100-2",exam:100,topic:"Fundamentals",q:"Which management channel do iOS and iPadOS devices use to talk to Jamf Pro?",options:["The native MDM protocol only","The Jamf management framework (binary) only","Both MDM and the Jamf binary","SSH"],note:"Only computers can install the Jamf binary for extras like policies and scripts — mobile devices are managed purely through Apple's MDM protocol."},
+{id:"j100-3",exam:100,topic:"Fundamentals",q:"What must be uploaded to Jamf Pro before it can manage any device at all?",options:["A valid APNs certificate","A VPN configuration","A static IP allow-list","A local admin password"],note:"Without a current APNs certificate, MDM commands can't be delivered and management breaks fleet-wide."},
+{id:"j100-4",exam:100,topic:"Fundamentals",q:"Which Apple platforms can Jamf Pro manage besides macOS and iOS?",options:["iPadOS and tvOS","Android and Windows","watchOS only","Linux servers"],note:"Core Jamf Pro platform support covers macOS, iOS, iPadOS, and tvOS."},
+{id:"j100-5",exam:100,topic:"Enrollment",q:"Which enrollment method supervises a device automatically and can apply settings before Setup Assistant finishes?",options:["Automated Device Enrollment","User-Initiated Enrollment","Manual profile installation","Enrollment via email link only"],note:"Tied to Apple Business Manager / Apple School Manager, this is Apple's zero-touch, supervised enrollment path."},
+{id:"j100-6",exam:100,topic:"Enrollment",q:"Is Automated Device Enrollment the only way to supervise a mobile device?",options:["No — Apple Configurator can also supervise devices","Yes, supervision requires ADE","No — any enrollment method supervises devices","Supervision no longer exists on iOS"],note:"Apple Configurator can supervise a device connected directly to a Mac, though ADE is the standard scalable method."},
+{id:"j100-7",exam:100,topic:"Enrollment",q:"What does a user do during 'User-Initiated Enrollment'?",options:["Browses to an enrollment URL and installs the MDM profile themselves","Nothing — it's fully automatic","Calls IT to remote in","Downloads the Jamf Pro server software"],note:"This self-service style enrollment is common for BYOD and produces an unsupervised device by default."},
+{id:"j100-8",exam:100,topic:"Enrollment",q:"Which Jamf Pro object controls Setup Assistant screens and settings applied during Automated Device Enrollment?",options:["A PreStage Enrollment","A Smart Group","An Extension Attribute","A Restricted Software record"],note:"PreStage Enrollments define which panes appear, initial scope, and supervision/MDM settings for ADE devices."},
+{id:"j100-9",exam:100,topic:"Inventory & Groups",q:"What's the key difference between a Smart Group and a Static Group?",options:["Smart Groups auto-update from saved criteria; Static Groups have a fixed, manual membership","Static Groups auto-update; Smart Groups are fixed","Both update automatically","Smart Groups can only contain mobile devices"],note:"Smart Groups are essentially saved, live searches; Static Groups are hand-picked rosters."},
+{id:"j100-10",exam:100,topic:"Inventory & Groups",q:"By default, does a Simple inventory search return exact or partial matches?",options:["Exact matches","Partial (wildcard) matches","Fuzzy/approximate matches","It searches only device names"],note:"Wildcards or advanced criteria are needed to broaden a Simple Search beyond exact-match results."},
+{id:"j100-11",exam:100,topic:"Inventory & Groups",q:"Which action updates a computer's inventory record in Jamf Pro?",options:["Running a recurring or manual 'Update Inventory' (recon)","Restarting the computer","Renaming the computer","Installing any app"],note:"Inventory refreshes happen on a check-in schedule, via policy, or via a remote 'Update Inventory' command."},
+{id:"j100-12",exam:100,topic:"Config Profiles",q:"A configuration profile is saved without any scope assigned. What happens?",options:["It isn't deployed to any device","It deploys to all devices","It deploys only to computers, not mobile devices","Jamf Pro auto-assigns it to administrators' devices"],note:"No target means no delivery — scope must be explicitly set."},
+{id:"j100-13",exam:100,topic:"Config Profiles",q:"What underlying file format do most configuration profile payloads use?",options:["Property list (.plist / XML)","JSON only","YAML","Shell script"],note:"Configuration profiles are structured plists, often with a .mobileconfig extension."},
+{id:"j100-14",exam:100,topic:"Config Profiles",q:"Can configuration profiles enforce passcode requirements on mobile devices?",options:["Yes","No, only policies can","No, only Extension Attributes can","Only on supervised Macs"],note:"Passcode payloads are a standard configuration profile setting."},
+{id:"j100-15",exam:100,topic:"Policies",q:"What are Jamf Pro Policies primarily used for?",options:["Automating tasks like installing packages, running scripts, and enforcing settings on computers","Purchasing apps in volume","Defining Setup Assistant panes","Creating LDAP accounts"],note:"Policies run on triggers (login, check-in, enrollment, custom) or a schedule, scoped to computers."},
+{id:"j100-16",exam:100,topic:"Policies",q:"Which two organizational objects can a policy be scoped to directly, besides groups and individual computers?",options:["Buildings and Departments","Time zones and locales","VPNs and Wi-Fi networks","App categories"],note:"Buildings and Departments model an org's physical/logical structure for fast scoping."},
+{id:"j100-17",exam:100,topic:"Policies",q:"A policy can be scoped to which two types of groups?",options:["Smart Groups and Static Groups","Only Smart Groups","Only Static Groups","Dynamic Groups and Federated Groups"],note:"Both group types are valid scoping targets."},
+{id:"j100-18",exam:100,topic:"Apps & VPP",q:"What lets an organization purchase and distribute App Store apps in volume to managed devices?",options:["Apps and Books content in Apple Business Manager / School Manager (formerly VPP)","The Mac App Store login only","TestFlight","Homebrew"],note:"Volume licensing lives in ABM/ASM and is assigned through Jamf Pro."},
+{id:"j100-19",exam:100,topic:"Apps & VPP",q:"For Jamf Pro to remove or update an app remotely on a mobile device, the app must be...?",options:["Managed by Jamf Pro","Free of charge","Installed manually first","Published by Apple only"],note:"Only apps installed under MDM management can be remotely removed or force-updated."},
+{id:"j100-20",exam:100,topic:"Self Service",q:"What is Jamf Pro's Self Service?",options:["An on-demand catalog where users install approved apps and run items without admin help","A backup tool for user data","A remote desktop viewer","A ticketing system"],note:"Self Service is the end-user-facing app portal, available on macOS and mobile."},
+{id:"j100-21",exam:100,topic:"Self Service",q:"Can an app or policy be made optional and install-on-demand rather than force-pushed?",options:["Yes, by scoping it as available in Self Service","No, all scoped items install automatically","Only for computers, never mobile devices","Only via Extension Attributes"],note:"Self Service availability makes install voluntary and user-initiated."},
+{id:"j100-22",exam:100,topic:"Accounts & Privileges",q:"Which Jamf Pro privilege set grants read-only access to everything?",options:["Auditor","Administrator","Custom","Enrollment Only"],note:"Auditor accounts can view but not change anything."},
+{id:"j100-23",exam:100,topic:"Accounts & Privileges",q:"Which privilege set gives complete, unrestricted access to all Jamf Pro settings and objects?",options:["Administrator (Full Access)","Auditor","Custom with zero boxes checked","Site Admin only"],note:"Full Access administrators bypass per-object privilege restrictions entirely."},
+{id:"j100-24",exam:100,topic:"Accounts & Privileges",q:"What does a 'Custom' privilege set let an admin configure?",options:["A tailored mix of Create/Read/Update/Delete rights per object type","Only read access","Only the ability to enroll devices","Access to billing only"],note:"Custom lets you build least-privilege roles object-by-object."},
+{id:"j100-25",exam:100,topic:"Org Structure",q:"Can management tasks like policies and profiles be scoped directly to Buildings and Departments?",options:["Yes","No, only to Smart Groups","No, only to individual devices","Only Departments, not Buildings"],note:"Buildings/Departments are first-class scoping targets, no group required."},
+{id:"j100-26",exam:100,topic:"Org Structure",q:"What do Buildings and Departments represent in Jamf Pro?",options:["An org's physical/logical structure, usable for scoping and reporting","Software licensing tiers","VPN endpoints","Types of configuration profiles"],note:"They're metadata fields assigned to devices/users to mirror real-world organization."},
+{id:"j100-27",exam:100,topic:"Fundamentals",q:"Which of these is a valid MDM remote command Jamf Pro can send to a mobile device?",options:["Lock Device","Turn Off Wi-Fi","Reboot into Recovery","Force Quit App"],note:"Standard mobile remote commands include Lock, Erase, Update Inventory, and Clear Passcode."},
+{id:"j100-28",exam:100,topic:"Fundamentals",q:"Can Jamf Pro remotely erase all user content and settings from a supervised mobile device?",options:["Yes","No, only Apple Support can do that","Only on Macs, not mobile devices","Only during enrollment"],note:"The Erase Device MDM command performs a full wipe."},
+{id:"j100-29",exam:100,topic:"Inventory & Groups",q:"What is an Extension Attribute used for?",options:["Collecting a custom piece of inventory data not natively gathered by Jamf Pro","Restricting an app from launching","Renaming a computer automatically","Encrypting a hard drive"],note:"EAs extend inventory with org-specific data points."},
+{id:"j100-30",exam:100,topic:"Fundamentals",q:"An APNs certificate used by Jamf Pro is tied to what?",options:["An Apple ID","A Google Workspace account","A GitHub account","A Microsoft Entra ID tenant"],note:"The certificate is signed by Apple against an Apple ID and must be renewed annually."},
+{id:"j100-31",exam:100,topic:"Org Structure",q:"What does 'Ownership' typically distinguish on a device inventory record?",options:["Institutional vs. Personal ownership","Wired vs. wireless network","macOS vs. iOS","Leased vs. purchased hardware"],note:"Ownership can affect which management capabilities and privacy protections apply."},
+{id:"j100-32",exam:100,topic:"Policies",q:"What Jamf Pro feature can prevent a specific application from being opened on managed Macs?",options:["Restricted Software","Self Service categories","PreStage Enrollment","Smart Computer Group"],note:"Restricted Software blocks and optionally kills a named process fleet-wide."},
+
+// ---------------- JAMF 200 ----------------
+{id:"j200-1",exam:200,topic:"Architecture",q:"Which Java web application server hosts the Jamf Pro web app?",options:["Apache Tomcat","Nginx","IIS","Node.js"],note:"Tomcat serves the Jamf Pro web interface; Java must be kept current for it to run properly on-prem."},
+{id:"j200-2",exam:200,topic:"Architecture",q:"Which database backs Jamf Pro's data storage?",options:["MySQL","PostgreSQL","MongoDB","SQLite"],note:"Settings and inventory data are committed to a MySQL database."},
+{id:"j200-3",exam:200,topic:"Architecture",q:"On an on-premise Jamf Pro server, what must the admin keep updated for Tomcat to keep functioning correctly?",options:["Java","Python","Ruby","PHP"],note:"Tomcat is a Java application server, so its Java runtime needs ongoing patching."},
+{id:"j200-4",exam:200,topic:"Architecture",q:"On Jamf Cloud versus on-prem, who maintains server software versions like Tomcat, Java, and MySQL?",options:["Jamf","The customer's IT team","Apple","A third-party MSP by default"],note:"Jamf Cloud shifts infrastructure maintenance to Jamf; on-prem puts it on the customer."},
+{id:"j200-5",exam:200,topic:"Architecture",q:"What Apple resource provides warranty and purchase info about devices, generally tied to a reseller/GSX account?",options:["GSX (Global Service Exchange)","App Store Connect","Apple Business Essentials","Apple Configurator"],note:"GSX access typically requires an established volume of devices/reseller relationship."},
+{id:"j200-6",exam:200,topic:"Architecture",q:"After changing a setting in Jamf Pro, what must happen for the change to persist?",options:["It must be saved / committed to the database","It applies instantly with no save step","It requires a full server restart","It syncs automatically every 24 hours only"],note:"Unsaved edits are lost if you navigate away before committing them."},
+{id:"j200-7",exam:200,topic:"ADE & ABM/ASM",q:"What must be exchanged between Jamf Pro and Apple Business Manager / School Manager to enable Automated Device Enrollment?",options:["An MDM server token","A VPN certificate","An LDAP bind password","A Wi-Fi profile"],note:"The token links the ABM/ASM organization to a specific Jamf Pro MDM server."},
+{id:"j200-8",exam:200,topic:"ADE & ABM/ASM",q:"Which Jamf Pro object controls Setup Assistant panes and initial settings for devices claimed via ADE?",options:["A PreStage Enrollment","A Smart Group","A Patch Policy","A Restricted Software record"],note:"PreStage settings apply the moment an ADE device is turned on."},
+{id:"j200-9",exam:200,topic:"ADE & ABM/ASM",q:"How are App Store apps typically purchased and distributed at scale in an ABM/ASM-connected environment?",options:["Through Apps and Books (VPP) content, assigned device- or user-based","Individually with personal Apple IDs","Through TestFlight invites","Through Composer packages"],note:"Device-based assignment avoids needing an Apple ID on the device at all."},
+{id:"j200-10",exam:200,topic:"Packages",q:"What tool is commonly used to build custom .pkg installers for macOS deployment?",options:["Composer","Xcode","Automator only","Terminal.app exclusively"],note:"Composer snapshots a system or folder to generate a distributable package."},
+{id:"j200-11",exam:200,topic:"Packages",q:"Which three file types are common macOS software deployment packages?",options:[".pkg, .mpkg, and .dmg",".exe, .msi, and .zip",".app, .ipa, and .apk",".deb, .rpm, and .tar"],note:"These are the formats Jamf Pro can upload and deploy via policies."},
+{id:"j200-12",exam:200,topic:"Packages",q:"Where must a package be uploaded before a policy can deploy it?",options:["A distribution point (e.g. Jamf's Cloud Distribution Point or an on-prem file share)","The user's home folder","An App Store Connect record","A GitHub repository"],note:"Distribution points are where clients actually download package content from."},
+{id:"j200-13",exam:200,topic:"Scripting",q:"Which shell is the modern macOS default for scripting, replacing bash?",options:["zsh","tcsh","ksh","fish"],note:"Apple switched the default interactive/login shell to zsh starting with Catalina."},
+{id:"j200-14",exam:200,topic:"Scripting",q:"In a Jamf Pro script, positional parameters 1–3 are reserved by the management framework for what?",options:["Mount point, computer name, and username","Script author, date, and version","The device serial number, MAC address, and IP","Policy ID, trigger, and category"],note:"Custom parameters therefore always start at $4."},
+{id:"j200-15",exam:200,topic:"Scripting",q:"Custom values passed from a policy into a script use which parameter range?",options:["Parameters 4–11","Parameters 1–3","Parameters 12–20","There is no parameter passing in Jamf Pro"],note:"The script object labels 4–11 so policies can fill them with context-specific values."},
+{id:"j200-16",exam:200,topic:"Profiles & Declarations",q:"What newer Apple management technology lets a device asynchronously fetch and apply status-based configuration, beyond traditional push profiles?",options:["Declarative Device Management (DDM)","Bonjour Sync","iCloud Profiles","Jamf Connect Sync"],note:"DDM shifts logic to the device, which reports status back rather than waiting on a push command."},
+{id:"j200-17",exam:200,topic:"Profiles & Declarations",q:"What underlies most configuration profile payload settings?",options:["A property list (.plist)","A JSON schema exclusively","An unreadable binary blob","An XML schema unrelated to plist"],note:"Configuration profiles are structured, typically XML, plist files."},
+{id:"j200-18",exam:200,topic:"Security & Permissions",q:"Alongside POSIX permissions, what macOS permission model uses Access Control Entries grouped into lists?",options:["ACL (Access Control List / ACE)","RBAC","SELinux contexts","Kerberos tickets"],note:"ACLs layer more granular entries on top of standard owner/group/other POSIX bits."},
+{id:"j200-19",exam:200,topic:"Security & Permissions",q:"Why is a self-signed certificate risky for a Jamf Pro server's web interface?",options:["It isn't verified by a trusted CA, leaving trust decisions to the end user","It expires every 24 hours","It can't use HTTPS at all","It blocks all enrollment"],note:"Browsers/clients flag it as untrusted, training users to click through warnings — a bad habit to encourage."},
+{id:"j200-20",exam:200,topic:"Security & Permissions",q:"Which macOS encryption feature does Jamf Pro commonly manage, including escrowing recovery keys?",options:["FileVault","BitLocker","LUKS","VeraCrypt"],note:"FileVault management and Institutional/Individual key escrow are core Jamf 200 topics."},
+{id:"j200-21",exam:200,topic:"Smart Groups & EAs",q:"Can Smart Group criteria reference a custom Extension Attribute?",options:["Yes — any inventory field, including EAs, can be used as criteria","No, only native fields are allowed","Only for mobile devices","Only if the EA is a pop-up menu type"],note:"This is how admins build groups around org-specific data, like a patch tier or asset tag prefix."},
+{id:"j200-22",exam:200,topic:"Smart Groups & EAs",q:"What are the three main input types for an Extension Attribute?",options:["Script, text field/pop-up menu, and LDAP mapping","CSV upload, API call, and QR code","Webhook, cron job, and plist","Manual entry, GPS location, and biometric"],note:"Script-based EAs are the most common for pulling dynamic values from the device."},
+{id:"j200-23",exam:200,topic:"Patch & Caching",q:"What does Jamf Pro's Patch Management feature track for a defined software title?",options:["Available vs. installed versions across the fleet","CPU and RAM usage per app","App Store review scores","Licensing seat counts"],note:"Patch reports highlight how far behind the fleet is on a given title."},
+{id:"j200-24",exam:200,topic:"Patch & Caching",q:"What built-in macOS service reduces bandwidth by locally caching software and App Store downloads for nearby Macs?",options:["Content Caching","Time Machine","iCloud Private Relay","Spotlight indexing"],note:"Content Caching serves downloads from a local Mac instead of re-fetching from Apple's CDN each time."},
+{id:"j200-25",exam:200,topic:"Directory Integration",q:"Can Jamf Pro display the individual members of an LDAP/IdP group?",options:["No — membership must be looked up in the source directory itself","Yes, always","Only for Static Groups","Only if 2FA is disabled"],note:"Jamf Pro can use the group for scoping and authentication but doesn't mirror its member list."},
+{id:"j200-26",exam:200,topic:"Directory Integration",q:"What's required for LDAP users to authenticate at enrollment or in Self Service?",options:["A configured LDAP/directory service (or cloud IdP) integration in Jamf Pro","A locally created Jamf Pro account for every user","A VPN connection","Nothing — it works by default"],note:"Directory bind settings must be configured under System Settings before this works."},
+{id:"j200-27",exam:200,topic:"Architecture",q:"Where do you configure how often computers check in, and set startup / login / logout script triggers?",options:["Computer Management (Check-in) settings","Self Service settings","PreStage Enrollment","Smart Group criteria"],note:"Check-in frequency and framework triggers live under global Computer Management settings."},
+{id:"j200-28",exam:200,topic:"Architecture",q:"Which macOS tool is most useful for diagnosing MDM enrollment or profile installation issues locally on a Mac?",options:["The unified log (Console.app / log show)","Activity Monitor only","Disk Utility","Migration Assistant"],note:"Combine the unified log with the device's management history in Jamf Pro for full context."},
+{id:"j200-29",exam:200,topic:"Security & Permissions",q:"What's a common effect of 'Personal' vs. 'Institutional' ownership on a device record?",options:["It can affect which management capabilities and privacy protections apply","It changes the device's serial number","It disables Wi-Fi profiles","It forces re-enrollment weekly"],note:"Ownership context shapes what an org can enforce, especially in BYOD scenarios."},
+{id:"j200-30",exam:200,topic:"ADE & ABM/ASM",q:"What has largely replaced traditional monolithic NetBoot/imaging workflows for modern Mac deployment?",options:["Automated Device Enrollment plus packages/scripts/profiles applied after Setup Assistant","Target Disk Mode cloning for every Mac","Manual USB installer creation for each machine","Time Machine restore from a golden image"],note:"Apple Silicon effectively ended NetBoot-style imaging in favor of this layered, zero-touch approach."},
+{id:"j200-31",exam:200,topic:"Directory Integration",q:"What type of Jamf Pro account references a user/group defined in an external directory instead of a locally created one?",options:["An LDAP (directory-based) account","A Custom account","An API-only account","A Site account"],note:"These accounts inherit credentials from the connected directory rather than storing a local password."},
+{id:"j200-32",exam:200,topic:"Architecture",q:"What can an 'Enrollment Only' privilege set do?",options:["Enroll devices only — no inventory or settings access","Everything an Administrator can do","Only view reports","Only manage Self Service content"],note:"It's a narrow, single-purpose role often handed to front-line deployment staff."},
+
+// ---------------- PRO TIER (WWDC 2026 & Troubleshooting) ----------------
+{id:"j999-1",exam:999,topic:"DDM 2026",q:"As of macOS 27, what technology is strictly required by Apple to manage and enforce software updates?",options:["Declarative Device Management (DDM)","Legacy MDM profiles","The softwareupdate binary in a policy","Content Caching via the Jamf binary"],note:"Apple entirely removed legacy MDM-based software update commands in the version 27 release. You must use DDM status reporting and enforcement."},
+{id:"j999-2",exam:999,topic:"DDM 2026",q:"What happens natively in macOS 27 when a DDM configuration containing a software package is removed from a managed device?",options:["The OS automatically uninstalls the software package.","The app remains but its settings are wiped.","A removal script must be triggered manually via a policy.","The device requires a reboot to erase the app data."],note:"Package Uninstall finishes what the package declaration started. Deploy it declaratively, remove it declaratively — the OS removes the software when the config leaves."},
+{id:"j999-3",exam:999,topic:"DDM 2026",q:"Under the 2026 DDM updates, how are network credentials (like passwords or certificates) handled compared to their configurations (like an Always-On VPN or DNS proxy)?",options:["Credentials are declared separately and referenced by the configurations that depend on them.","They are bundled together in a single payload.","Credentials must be manually typed by the user on first launch.","They are embedded in a custom script."],note:"By decoupling credentials from the configuration, updating a password no longer requires you to rebuild and re-push the entire VPN payload."},
+{id:"j999-4",exam:999,topic:"Scripting",q:"You deploy a script containing `chmod 700 /Users/Shared/SupportLogs` via a Jamf Pro policy. Who is granted access to the folder?",options:["Only the owner (root), with read, write, and execute permissions.","Everyone on the system, with full access.","The local admin group only.","Only the currently logged-in standard user."],note:"Because the Jamf binary runs as root, root becomes the owner. The '700' designation explicitly locks out the Group (0) and Everyone (0)."},
+{id:"j999-5",exam:999,topic:"Scripting",q:"A preflight script in your custom Composer `.pkg` exits with a code of `1`. What happens to the policy deploying this package?",options:["The installation immediately halts and the policy logs a Failure.","The package installs anyway, but logs a warning.","The Jamf binary attempts to run the postflight script instead.","The device reboots automatically to clear the error."],note:"Non-zero exit codes (like `exit 1`) in preinstall/preflight scripts tell the macOS installer engine that a fatal prerequisite failed, aborting the install immediately."},
+{id:"j999-6",exam:999,topic:"DDM 2026",q:"With macOS 27, Declarative App Configuration expanded to include support for hardware-bound keys and what other major security attestation feature?",options:["Managed Device Attestation","FileVault Institutional Keys","Kernel Extension whitelisting","System Integrity Protection bypassing"],note:"Apps can now receive settings/credentials from the MDM that are cryptographically tied to the physical device hardware, significantly reducing the risk of credential theft."},
+{id:"j999-7",exam:999,topic:"Troubleshooting",q:"You need to view the raw execution history of the Jamf management framework locally on a user's Mac to diagnose a silent failure. Which file do you check?",options:["/var/log/jamf.log","/Library/Logs/DiagnosticReports","/Users/Shared/jamf.txt","The macOS Unified Log only"],note:"While the Unified Log contains everything, `jamf.log` is specifically written by the Jamf binary and contains the exact transcript of policy executions and script outputs."},
+
+/* ---- SUP-2026 · Apple Device Support (Apple Certified Support Professional) ---- */
+{id:"sup-1",exam:300,topic:"Accounts & iCloud",q:"What does Find My rely on to help locate a lost personal device even when it has no Wi-Fi or cellular connection?",options:["A Bluetooth-based finding network contributed anonymously by nearby Apple devices","A GPS chip that broadcasts continuously to Apple's servers","The device's IMEI reported by the cell carrier","An always-on cellular ping from Apple"],note:"The offline finding network uses encrypted Bluetooth signals picked up by nearby Apple devices, not a persistent cellular or GPS broadcast."},
+{id:"sup-2",exam:300,topic:"Accounts & iCloud",q:"What protection does turning on Find My automatically enable on a personal device?",options:["Activation Lock, tying the device to the owner's Apple Account so it can't be erased and reactivated by someone else","A firewall blocking all inbound connections","Automatic FileVault encryption","Content & Privacy Restrictions"],note:"Activation Lock is enabled the moment Find My is turned on, and requires the owner's Apple Account credentials to erase/reactivate the device."},
+{id:"sup-3",exam:300,topic:"Accounts & iCloud",q:"A family wants to share purchased apps, an iCloud+ storage plan, and each other's locations across up to six Apple Accounts. What feature covers this?",options:["Family Sharing","iCloud Keychain","Managed Apple Accounts","Screen Time"],note:"Family Sharing links up to six Apple Accounts for shared purchases, storage, and optional location sharing."},
+{id:"sup-4",exam:300,topic:"Accounts & iCloud",q:"Which iCloud feature securely stores and syncs a user's saved website passwords and Wi-Fi passwords across their signed-in devices?",options:["iCloud Keychain","iCloud Drive","Handoff","Universal Clipboard"],note:"iCloud Keychain end-to-end encrypts and syncs credentials between a user's own devices."},
+{id:"sup-5",exam:300,topic:"Backup & Migration",q:"Which built-in macOS tool creates ongoing, versioned backups of a Mac to an external or network drive?",options:["Time Machine","Migration Assistant","Disk Utility","Archive Utility"],note:"Time Machine performs incremental, versioned backups so a user can restore individual files or the whole system from a point in time."},
+{id:"sup-6",exam:300,topic:"Backup & Migration",q:"A customer just bought a new Mac and wants to bring over their accounts, files, and apps from a Time Machine backup during setup. What do they use?",options:["Migration Assistant","Time Machine restore only","System Information","Startup Security Utility"],note:"Migration Assistant runs during (or after) Setup Assistant and can pull data from a Time Machine backup, another Mac, or a Windows PC."},
+{id:"sup-7",exam:300,topic:"Backup & Migration",q:"Where are an iPhone's local (non-iCloud), encrypted backups typically stored?",options:["On a computer, via the Finder's device pane (or iTunes on Windows)","On the SIM card","In Keychain Access only","On a paired Apple Watch"],note:"A local backup lives on the connected computer, and can optionally be encrypted with a password the user sets."},
+{id:"sup-8",exam:300,topic:"Backup & Migration",q:"A customer's iPhone stops backing up to iCloud because it's out of storage. What's the most direct fix?",options:["Free up iCloud storage, or upgrade the iCloud+ plan","Reset All Settings","Erase All Content and Settings","Turn off Find My"],note:"An iCloud backup simply needs enough free space in the account's iCloud storage plan to complete."},
+{id:"sup-9",exam:300,topic:"Security & Privacy",q:"Which macOS feature performs full-disk encryption to protect data at rest on the startup disk?",options:["FileVault","Gatekeeper","XProtect","System Integrity Protection (SIP)"],note:"FileVault encrypts the entire startup disk; without the account password or a recovery key, the data is unreadable."},
+{id:"sup-10",exam:300,topic:"Security & Privacy",q:"What macOS technology scans for and quarantines apps matching known malware signatures?",options:["XProtect","FileVault","Gatekeeper","Time Machine"],note:"XProtect is Apple's built-in signature-based malware check, updated independently of full OS updates."},
+{id:"sup-11",exam:300,topic:"Security & Privacy",q:"What macOS feature checks that a downloaded app is properly signed and notarized before allowing it to open for the first time?",options:["Gatekeeper","FileVault","XProtect","SIP"],note:"Gatekeeper performs the first-launch trust check; XProtect separately watches for known malware signatures."},
+{id:"sup-12",exam:300,topic:"Security & Privacy",q:"What optional protection dramatically restricts message attachments, link previews, and other complex features, aimed at users facing highly targeted cyberattacks?",options:["Lockdown Mode","Stolen Device Protection","Screen Time","Content & Privacy Restrictions"],note:"Lockdown Mode trades convenience for a sharply reduced attack surface, intended for a small number of at-risk users."},
+{id:"sup-13",exam:300,topic:"Networking",q:"A Mac can see nearby Wi-Fi networks but won't join the customer's home network specifically. What's a reasonable first troubleshooting step?",options:["Forget the network in Wi-Fi settings and rejoin, re-entering the password","Reinstall macOS","Reset the SMC first","Replace the Wi-Fi card"],note:"A stale/incorrect saved network profile is a common, low-risk first cause to rule out before anything more invasive."},
+{id:"sup-14",exam:300,topic:"Networking",q:"Which built-in tool helps diagnose Wi-Fi problems and reports on nearby networks and signal quality?",options:["Wireless Diagnostics (Option-click the Wi-Fi menu bar icon)","Console.app alone","Network Utility's Traceroute tab alone","Activity Monitor"],note:"Wireless Diagnostics walks through a guided assistant and can generate a detailed report for escalation."},
+{id:"sup-15",exam:300,topic:"Networking",q:"Which feature lets a nearby iPhone share its cellular data connection with a Mac over Wi-Fi, Bluetooth, or USB?",options:["Personal Hotspot","AirDrop","Continuity Camera","Universal Control"],note:"Personal Hotspot turns the iPhone's cellular connection into a shareable network for other trusted devices."},
+{id:"sup-16",exam:300,topic:"Networking",q:"A user reports slow file transfers on the office network. Which built-in tool shows real-time network bandwidth per app or process?",options:["Activity Monitor's Network tab","Console.app","Disk Utility","System Information"],note:"Activity Monitor's Network tab breaks down sent/received data by process, useful for spotting a bandwidth hog."},
+{id:"sup-17",exam:300,topic:"Troubleshooting & Recovery",q:"How does a technician boot an Apple Silicon Mac into macOS Recovery?",options:["Press and hold the power button until 'Loading startup options' appears","Hold Command-R at startup","Hold Option at startup only","There is no built-in Recovery; a USB installer is required"],note:"Apple Silicon Macs use the power button to reach startup options, including Recovery; Command-R is the Intel-era shortcut."},
+{id:"sup-18",exam:300,topic:"Troubleshooting & Recovery",q:"A Mac's storage is reporting file system errors. Which built-in tool checks and repairs disk-level issues?",options:["Disk Utility → First Aid","Migration Assistant","Time Machine","Activity Monitor"],note:"First Aid verifies and repairs the file system structure of a selected volume or disk."},
+{id:"sup-19",exam:300,topic:"Troubleshooting & Recovery",q:"An iPhone with Face ID is completely unresponsive. What's the standard forced-restart sequence?",options:["Quickly press and release Volume Up, then Volume Down, then press and hold the Side button","Hold Home and the Side button together","Hold Volume Down and the Side button only","Double-press the Side button"],note:"This three-step sequence is the current forced-restart method on Face ID iPhone models."},
+{id:"sup-20",exam:300,topic:"Troubleshooting & Recovery",q:"Which tool, run at startup, checks a Mac's own hardware (logic board, memory, and more) for faults?",options:["Apple Diagnostics","Console.app","Disk Utility","Activity Monitor"],note:"Apple Diagnostics runs outside the installed OS and reports reference codes tied to specific hardware issues."},
+{id:"sup-21",exam:300,topic:"Accessibility & Peripherals",q:"Which macOS feature lets a user control multiple nearby Macs (or a Mac and an iPad) with one keyboard and mouse?",options:["Universal Control","AirDrop","Sidecar","Handoff"],note:"Universal Control extends a single pointer and keyboard seamlessly across nearby signed-in devices."},
+{id:"sup-22",exam:300,topic:"Accessibility & Peripherals",q:"A user wants their iPad to work as a wireless second display for their Mac, with Apple Pencil support. What feature enables this?",options:["Sidecar","Universal Control","AirPlay Mirroring alone","Continuity Camera"],note:"Sidecar turns a nearby iPad into an extended or mirrored Mac display, with Apple Pencil input."},
+{id:"sup-23",exam:300,topic:"Accessibility & Peripherals",q:"Which macOS accessibility feature reads screen content aloud and enables full navigation without needing to see the display?",options:["VoiceOver","Zoom","Switch Control","Live Speech"],note:"VoiceOver is Apple's built-in screen reader, supporting gesture and keyboard navigation."},
+{id:"sup-24",exam:300,topic:"Accessibility & Peripherals",q:"A customer wants their iPhone's camera to act as a high-quality webcam for video calls on their Mac. What feature provides this?",options:["Continuity Camera","AirPlay","Sidecar","Handoff"],note:"Continuity Camera lets a nearby iPhone serve as a wireless or wired webcam, including features like Desk View and Center Stage."},
+
+/* ---- DEP-2026 · Apple Deployment and Management (Apple Certified IT Professional) ---- */
+{id:"dep-1",exam:400,topic:"ABM/ASM & MDM",q:"What must an organization set up before it can use zero-touch enrollment or volume app purchasing at all?",options:["An Apple Business Manager or Apple School Manager account","A Jamf Pro server specifically","A Managed Apple Account for every employee","A Content Caching server"],note:"ABM/ASM is the organizational hub that every other deployment capability — ADE, Apps and Books, federated accounts — connects through."},
+{id:"dep-2",exam:400,topic:"ABM/ASM & MDM",q:"What links a third-party MDM solution to an organization's Apple Business Manager instance?",options:["An MDM server token exchanged between ABM/ASM and the MDM","A shared administrator password","A site-to-site VPN tunnel","A DNS TXT record"],note:"The server token authorizes that specific MDM server to manage devices and content assigned to it in ABM/ASM."},
+{id:"dep-3",exam:400,topic:"ABM/ASM & MDM",q:"How does a device typically become associated with an organization's Apple Business Manager for zero-touch deployment?",options:["Purchased through a participating reseller/carrier, or added manually via Apple Configurator","Only by visiting an Apple Store in person","Automatically the first time it joins any Wi-Fi network","By restoring from any iCloud backup"],note:"Participating resellers report the purchase to ABM/ASM automatically; Apple Configurator covers devices bought outside that channel."},
+{id:"dep-4",exam:400,topic:"ABM/ASM & MDM",q:"What is the core job of an MDM server in an Apple deployment?",options:["Sending management commands and configurations to enrolled devices over Apple's push and declarative channels","Hosting the App Store catalog itself","Issuing Apple Accounts to new employees","Replacing the need for Wi-Fi infrastructure"],note:"The MDM is the control plane; it never replaces Apple's own services, it configures and monitors devices that use them."},
+{id:"dep-5",exam:400,topic:"Enrollment",q:"Which enrollment method is meant for organization-owned devices, applies supervision automatically, and can lock the MDM profile so a user can't remove it?",options:["Automated Device Enrollment (ADE)","User Enrollment","Manual profile installation","Ad-hoc Apple Configurator enrollment"],note:"ADE is Apple's zero-touch path, tied to ABM/ASM and designed for company- or school-owned hardware."},
+{id:"dep-6",exam:400,topic:"Enrollment",q:"Which enrollment method targets personally-owned (BYOD) devices and keeps managed data cryptographically separate from personal data?",options:["User Enrollment","Automated Device Enrollment","Shared iPad enrollment","Recovery Mode enrollment"],note:"User Enrollment creates a separate managed APFS volume/data silo instead of supervising the whole device."},
+{id:"dep-7",exam:400,topic:"Enrollment",q:"What Apple Account type is created for User Enrollment, keeping work access separate from a person's personal Apple Account?",options:["A Managed Apple Account","A Family Sharing account","A Content Caching account","A Guest account"],note:"The Managed Apple Account exists alongside — but never merges with — the user's personal Apple Account."},
+{id:"dep-8",exam:400,topic:"Enrollment",q:"Which tool manually supervises or configures a device connected directly via USB, useful for testing outside of ADE?",options:["Apple Configurator","Migration Assistant","Disk Utility","Boot Camp Assistant"],note:"Apple Configurator can prepare, supervise, and add devices to Apple Business Manager without a purchase-based ADE link."},
+{id:"dep-9",exam:400,topic:"Profiles & DDM",q:"What replaced purely push-based profile delivery, letting a device asynchronously check status and report compliance back to the MDM?",options:["Declarative Device Management (DDM)","Automated Device Enrollment","Content Caching","Bonjour discovery"],note:"DDM moves logic onto the device itself, which evaluates declarations locally and reports status changes."},
+{id:"dep-10",exam:400,topic:"Profiles & DDM",q:"Under DDM, what are the core building blocks used to describe a desired device state and report back on it?",options:["Declarations, Status items, and Management (Activation)","Profiles, Policies, and Packages","Tokens, Certificates, and Payloads","Groups, Scopes, and Triggers"],note:"Declarations describe the desired configuration; Status items report device state; Activations tie declarations to conditions."},
+{id:"dep-11",exam:400,topic:"Profiles & DDM",q:"A configuration profile is created in an MDM but never assigned to any device or group. What happens?",options:["It isn't deployed anywhere until it's scoped","It deploys to every enrolled device by default","It deploys automatically to supervised devices only","It's queued and applied at the next OS update"],note:"Scope is what actually targets a profile at devices or users — creating it alone does nothing."},
+{id:"dep-12",exam:400,topic:"Profiles & DDM",q:"What underlying structured format do most configuration profile payloads use?",options:["A property list (.plist)","An unstructured binary blob","YAML","A compiled executable"],note:"Configuration profiles are structured, typically XML, property list files, often with a .mobileconfig extension."},
+{id:"dep-13",exam:400,topic:"App & Content Distribution",q:"What replaced the older Volume Purchase Program (VPP) for buying and assigning apps and books in bulk?",options:["Apps and Books in Apple Business Manager / Apple School Manager","The regular consumer App Store","TestFlight","Apple Configurator licensing"],note:"Apps and Books is the current name for managed, bulk content purchasing and assignment inside ABM/ASM."},
+{id:"dep-14",exam:400,topic:"App & Content Distribution",q:"Which app assignment method avoids needing any Apple Account signed in on a shared or kiosk-style device?",options:["Device-based assignment","User-based assignment only","Personal Apple ID purchase","Family Sharing purchase"],note:"Device-based assignment ties the license to the device record itself, not to a signed-in account."},
+{id:"dep-15",exam:400,topic:"App & Content Distribution",q:"What's required before an organization can revoke a volume-purchased app license from one device and reassign it to another?",options:["The app must have been assigned through managed/volume distribution in the first place","The device must be jailbroken","The app must be free","The device must be offline"],note:"Only apps distributed through managed licensing can be centrally reclaimed and reassigned."},
+{id:"dep-16",exam:400,topic:"App & Content Distribution",q:"Shared iPad lets multiple students sign in on one device with their own account. What does ABM/ASM provision to make this work at scale?",options:["A Managed Apple Account for each student or user","A single shared Apple Account for the whole class","Local-only accounts with no cloud sync","Guest Mode exclusively"],note:"Each student's Managed Apple Account keeps their own documents, settings, and app data separate on shared hardware."},
+{id:"dep-17",exam:400,topic:"Identity & SSO",q:"What lets a Managed Apple Account authenticate using an organization's existing identity provider (like Okta or Microsoft Entra ID) instead of a separate Apple-only password?",options:["Federated authentication / SSO integration with the IdP","iCloud Keychain sync","Family Sharing","Content Caching"],note:"Federation ties Managed Apple Account sign-in to the org's own directory, including its MFA and password policies."},
+{id:"dep-18",exam:400,topic:"Identity & SSO",q:"Why would an IT admin federate Managed Apple Accounts with their identity provider?",options:["To centralize credential management, MFA, and offboarding through the org's existing directory","To bypass the need for an MDM entirely","To let personal iCloud data sync onto work devices","To disable Activation Lock fleet-wide"],note:"Federation keeps identity lifecycle (creation, MFA, deactivation) in one authoritative system instead of two."},
+{id:"dep-19",exam:400,topic:"Identity & SSO",q:"What extension type lets an MDM-managed app obtain sign-in tokens using the device's platform SSO, instead of repeated password prompts?",options:["An SSO app extension (Platform SSO)","A VPN payload","A web content filter payload","A Content Caching agent"],note:"Platform SSO extensions let compatible apps silently reuse an already-established, trusted sign-in session."},
+{id:"dep-20",exam:400,topic:"Identity & SSO",q:"When an employee leaves the organization, what's the recommended way to fully revoke their Managed Apple Account access?",options:["Deprovision/deactivate the account in the identity provider and Apple Business Manager","Just erase their device locally","Change the office Wi-Fi password","Nothing — it expires automatically after 30 days"],note:"Federated accounts should be deprovisioned at the source of truth (the IdP/ABM), not just removed from one device."},
+{id:"dep-21",exam:400,topic:"Security & Compliance",q:"What MDM-driven feature cryptographically ties credentials or configurations to the specific physical hardware they were issued to, reducing credential-theft risk?",options:["Managed Device Attestation","FileVault","Content Caching","Bonjour Sync"],note:"Managed Device Attestation lets a service verify a request truly came from a specific, hardware-bound, managed device."},
+{id:"dep-22",exam:400,topic:"Security & Compliance",q:"For an org-owned, supervised Mac, which FileVault key escrow option lets IT recover encrypted data without depending on one individual's personal key?",options:["Institutional recovery key escrow to the MDM","Personal recovery key texted to the user","No escrow — FileVault can't be centrally managed","iCloud Keychain sync of the FileVault key"],note:"Institutional recovery keys are generated and escrowed centrally, independent of any one user's personal key."},
+{id:"dep-23",exam:400,topic:"Security & Compliance",q:"What must be true for a passcode/password policy pushed via MDM to actually be enforceable on a device?",options:["The device must be supervised (or at least have the profile properly scoped and installed) with the payload correctly configured","The device must be jailbroken first","The user must approve every enforcement individually","Passcodes can never be enforced remotely"],note:"Enforcement depends on supervision level and correct profile scope/configuration — not on user opt-in."},
+{id:"dep-24",exam:400,topic:"Security & Compliance",q:"Which network configuration routes and can inspect all of a supervised device's traffic through a single MDM-managed VPN connection at all times?",options:["Always-On VPN","Personal Hotspot","Content Caching","AirDrop"],note:"Always-On VPN keeps a supervised device's traffic tunneled continuously, not just per-app or on-demand."},
+
+/* ---- SVC-16A / SVC-19A · Apple Service Fundamentals (prereq for ACiT / ACMT) ---- */
+{id:"svc-1",exam:500,topic:"Customer Experience",q:"A customer arrives agitated because their repair is taking longer than expected. What's the best first response?",options:["Acknowledge their frustration, then clearly explain the status and next steps","Immediately offer a refund to end the conversation","Point out that their device model is old and outdated","Direct them to file a written complaint before discussing anything"],note:"Acknowledging the emotion first, then giving concrete information, de-escalates far more reliably than jumping straight to a fix or a policy."},
+{id:"svc-2",exam:500,topic:"Customer Experience",q:"Before starting any repair, what should a technician always do regarding a customer's device data?",options:["Explain the data-loss risk of that specific repair and confirm the customer has a backup","Assume the customer already backed up and skip the conversation","Automatically create a backup without asking","Tell the customer data loss never happens with Apple repairs"],note:"Setting accurate data-loss expectations up front protects both the customer and the shop from a painful surprise later."},
+{id:"svc-3",exam:500,topic:"Customer Experience",q:"A customer's device is out of warranty and the repair estimate is high. What best reflects good customer communication?",options:["Clearly explain the coverage status, the cost, and the available options before proceeding","Proceed with the repair silently and bill them afterward","Tell them nothing can be done and turn them away","Only mention the cost if they happen to ask"],note:"Transparency about coverage and cost, before work begins, is central to how this exam frames good service."},
+{id:"svc-4",exam:500,topic:"Customer Experience",q:"Why does accurate repair documentation matter for the customer experience, not just internal tracking?",options:["It gives the customer (and any technician) an accurate history of what was done to their device","It's only used for internal sales metrics","It has no effect on the customer, only on inventory","It's optional unless the customer specifically asks for it"],note:"Good documentation protects the customer's warranty history and helps any future technician pick up context quickly."},
+{id:"svc-5",exam:500,topic:"Customer Experience",q:"A customer wants a status update on their in-progress repair. What's the appropriate resource for a technician to check?",options:["The repair's record in the service management/tracking system (e.g. GSX-based tools)","The technician's personal notes only","There is no way to track repair status","The customer must contact Apple directly, not the service provider"],note:"Repair status should live in the shared tracking system, not in one technician's head or notebook."},
+{id:"svc-6",exam:500,topic:"ESD Precautions",q:"What is ESD, and why does it matter when servicing Apple devices?",options:["Electrostatic Discharge — an unseen static charge that can silently damage sensitive internal components","Extended Service Duration — a warranty term","External Storage Device — a type of accessory","Emergency Shutdown Directive — a safety procedure"],note:"ESD damage is often invisible at the time it happens, which is exactly why consistent precautions matter every time."},
+{id:"svc-7",exam:500,topic:"ESD Precautions",q:"Which of these is a standard ESD precaution before opening a device for repair?",options:["Wear a properly grounded anti-static wrist strap and work on an ESD mat","Wear rubber gloves with no grounding","Work on a carpeted surface for cushioning","Keep the device plugged into wall power while grounding yourself"],note:"Grounding yourself (and the work surface) to a common point is what actually bleeds off static charge safely."},
+{id:"svc-8",exam:500,topic:"ESD Precautions",q:"Why should synthetic clothing materials be avoided or covered in an ESD-sensitive work area?",options:["They generate and hold static charge more readily than natural fibers","They're flammable near tools","They interfere with Wi-Fi signals","They scratch device surfaces"],note:"Synthetics like polyester and fleece build up static far more easily than cotton, increasing ESD risk near open hardware."},
+{id:"svc-9",exam:500,topic:"Safety",q:"A technician notices a lithium-ion battery is visibly swollen during a repair. What's the correct response?",options:["Handle it with caution per battery-safety procedure and isolate/dispose of it properly — never puncture or bend it","Puncture it to release pressure safely","Continue the repair normally; swelling is only cosmetic","Charge it fully first to confirm it still works"],note:"A swollen battery is a genuine safety hazard; puncturing or bending it can cause fire or chemical burns."},
+{id:"svc-10",exam:500,topic:"Safety",q:"What's a key safety reason for disconnecting a device's battery (when possible) before working near the display or logic board?",options:["To reduce the risk of electric shock or accidental short-circuits during the repair","It's required only for cosmetic repairs","It speeds up the repair, with no real safety benefit","It's needed only on devices still under warranty"],note:"An energized board raises the risk of shorts and shock while probing or disconnecting components."},
+{id:"svc-11",exam:500,topic:"Safety",q:"Which of these is a general workspace safety practice recommended during repairs?",options:["Keep tools organized and the workspace free of clutter and liquids","Eat and drink at the repair bench to save time","Stack multiple open devices on top of each other","Work with tools ungrounded to move faster"],note:"A clean, organized, liquid-free bench reduces both ESD risk and the chance of physical damage or accidents."},
+{id:"svc-12",exam:500,topic:"Troubleshooting",q:"What should generally happen before a technician assumes a hardware fault and begins disassembly?",options:["Rule out software-level causes first (updates, resets, diagnostics) where the symptom allows","Skip straight to replacing the most expensive component","Always reinstall the OS regardless of the symptom","Immediately escalate to a full device replacement"],note:"Software-level checks are faster, cheaper, and non-destructive — they belong earlier in the troubleshooting flow."},
+{id:"svc-13",exam:500,topic:"Troubleshooting",q:"Which official tool helps a technician run a built-in hardware check to isolate a suspected component failure?",options:["Apple Diagnostics","Time Machine","Migration Assistant","Screen Time"],note:"Apple Diagnostics reports reference codes that point toward specific hardware subsystems."},
+{id:"svc-14",exam:500,topic:"Troubleshooting",q:"A customer describes an intermittent issue that isn't currently reproducible on the bench. What's a good next step?",options:["Ask clarifying questions about when/how it happens and check diagnostic or crash logs for patterns","Tell the customer it isn't a real issue","Replace the most commonly-failing part without further diagnosis","Close the case immediately since it can't be seen live"],note:"Intermittent issues need more information gathering, not guesswork parts-swapping, before a repair decision is made."},
+{id:"svc-15",exam:500,topic:"Product Knowledge",q:"What system lets a technician verify a device's warranty status, purchase date, and eligible service options by serial number?",options:["GSX (Global Service Exchange)","App Store Connect","iCloud.com","Apple Configurator"],note:"GSX is the authorized-service system for warranty checks, parts ordering, and repair case management."},
+{id:"svc-16",exam:500,topic:"Product Knowledge",q:"Why does Apple use part serialization/pairing on certain genuine replacement components?",options:["To verify authentic parts and preserve full feature functionality and security after a repair","To prevent any repairs from ever being performed","To track a customer's location","To increase the retail price only"],note:"Serialization confirms a genuine part and helps features tied to that component (like True Tone or battery health reporting) keep working correctly."},
+{id:"svc-17",exam:500,topic:"Product Knowledge",q:"What resource should a technician consult for the correct, current repair procedure and specifications for a specific device model?",options:["Apple's official service/repair documentation for that product","General internet forums exclusively","Guesswork based on a similar-looking older model","The customer's own instructions"],note:"Official service documentation is updated per model/revision and is the authoritative source, not forum posts or assumptions."},
+{id:"svc-18",exam:500,topic:"Product Knowledge",q:"How should AppleCare coverage status factor into a service technician's intake process?",options:["It determines what's covered at no or reduced cost, so it should be checked before quoting a customer","It has no effect on repair cost or process","It only covers accessories, never the device itself","It's automatically applied with no need to check status"],note:"Checking coverage before quoting avoids surprising the customer with an inaccurate estimate."}
+];
+
+/* ================= LABS ================= */
+const LABS = [
+{id:"lab1", title:"Jamf Pro Server & Settings Orientation", time:"30–45 min", topic:"Architecture",
+ objective:"Get comfortable navigating a live Jamf Pro instance, confirm it's ready to manage devices, and understand where the settings that Jamf 200 assumes you know actually live.",
+ prereqs:["A Jamf Pro trial or test instance (request one at jamf.com/request-trial — no credit card required)","Admin login for that instance"],
+ steps:[
+  "Log in to your instance at https://your-server.jamfcloud.com.",
+  "Go to Settings → Global Management → Push Certificates and confirm an APNs certificate is present and not expired. If missing, generate a CSR and upload the signed cert from Apple's Push Certificates Portal.",
+  "Go to Settings → System → User Accounts and Groups. Create a second admin account with the Auditor privilege set.",
+  "Log in as that Auditor account in a private/incognito window and confirm you can view but not edit anything.",
+  "Back in your primary account, go to Settings → Global Management → Buildings and Departments and create one of each for a fictional org.",
+  "Open Computers → Search Inventory to see what's already enrolled (likely nothing yet on a fresh trial)."
+ ],
+ verify:["APNs certificate shows a valid, future expiration date","The Auditor login can view every page but every Save/Edit control is disabled or hidden","One Building and one Department exist under Global Management"],
+ challenge:"Create a third account with a Custom privilege set that can only Create and Read Policies — nothing else. Log in as it and confirm you can't touch Computers, Profiles, or Settings.",
+ selfCheck:[
+  {q:"Which privilege set grants read-only access to everything?", a:"Auditor."},
+  {q:"What must be renewed (roughly annually) for MDM to keep functioning at all?", a:"The APNs certificate."}
+ ]},
+{id:"lab2", title:"Building Packages with Composer", time:"45–60 min", topic:"Packages",
+ objective:"Package a real application into a .pkg with Composer, upload it to Jamf Pro, and deploy it with a policy.",
+ prereqs:["A non-production test Mac you can erase/reinstall freely","Composer, downloaded from your Jamf Account → Products","The test Mac enrolled in your trial instance"],
+ steps:[
+  "Install Composer on your test Mac.",
+  "In Composer, take a 'before' snapshot of the whole system (or just /Applications).",
+  "Install or drag in a small free app, then take an 'after' snapshot so Composer isolates exactly what changed.",
+  "Build the result as a .pkg and give it a clear name and version, e.g. SampleApp-1.0.pkg.",
+  "In Jamf Pro: Settings → Computer Management → Packages → New, and upload the .pkg.",
+  "Create a Policy (Computers → Policies → New): add the package under the Packages payload, set the trigger to Recurring Check-in, and scope it to your test Mac.",
+  "On the test Mac, run `sudo jamf policy` in Terminal (or wait for the check-in) and confirm the app installs."
+ ],
+ verify:["Package appears under Settings → Packages with a green checkmark","Policy log on the device shows 'Completed'","The app is actually present in /Applications on the test Mac"],
+ challenge:"Rebuild the same app as version 1.1 and figure out why the policy won't reinstall it automatically — then find the execution-frequency setting that changes that behavior.",
+ selfCheck:[
+  {q:"What tool is commonly used to build custom .pkg installers for macOS?", a:"Composer."},
+  {q:"Where must a package live before a policy can deploy it?", a:"A distribution point — it has to be uploaded to Jamf Pro first."}
+ ]},
+{id:"lab3", title:"Scripting for Jamf Pro (zsh + parameters)", time:"30–45 min", topic:"Scripting",
+ objective:"Write a zsh script, upload it as a Jamf Pro script object, and pass custom values into it from a policy.",
+ prereqs:["The test Mac from Lab 2, enrolled and reachable"],
+ steps:[
+  "Write a short zsh script that reads $4 and $5, then echoes a message and writes a small log file using those values.",
+  "In Jamf Pro: Settings → Computer Management → Scripts → New, paste the script, and label Parameter 4 as 'Department Name' and Parameter 5 as 'Log Path'.",
+  "Create a policy using this script. Fill in real values for Parameters 4 and 5 at the policy level.",
+  "Scope the policy to your test Mac, and set the trigger to Custom with an event name like runDeptScript.",
+  "On the Mac, trigger it manually: `sudo jamf policy -event runDeptScript`.",
+  "Check that the log file was created in the right place with the right department name inside it, then check the policy log in Jamf Pro for exit code 0."
+ ],
+ verify:["Policy log shows the script ran with exit code 0","The log file exists at the expected path and contains the department name you set in the policy"],
+ challenge:"Modify the script to check the macOS version and `exit 1` if it's below a threshold you pick. Re-run the policy and confirm Jamf Pro reports it as Failed.",
+ selfCheck:[
+  {q:"What are positional parameters 1–3 reserved for by the Jamf framework?", a:"Mount point, computer name, and username — so custom parameters always start at $4."},
+  {q:"Which shell is the modern macOS scripting default?", a:"zsh."}
+ ]},
+{id:"lab4", title:"Automated Device Enrollment & PreStage", time:"30–40 min", topic:"ADE & ABM/ASM",
+ objective:"Understand PreStage configuration end-to-end, and see the contrast with User-Initiated Enrollment if you don't have Apple Business Manager access.",
+ prereqs:["Your trial instance", "Optional: a personal, fully erasable test device if you want to actually enroll something"],
+ steps:[
+  "Go to Computers → PreStage Enrollments → New and walk through every tab — Setup Assistant panes to skip, account settings, and scope — even if you won't assign a real device.",
+  "Do the same for Mobile Device PreStage Enrollments and compare the two.",
+  "On a personal, erasable test device (never your daily device), browse to https://your-server.jamfcloud.com/enroll and complete a User-Initiated Enrollment instead.",
+  "In Jamf Pro, open that device's record and check its Management tab — note that it enrolled as Unsupervised.",
+  "When you're done, remove the MDM profile / un-manage the device from Jamf Pro so it's no longer under your control."
+ ],
+ verify:["You can explain what every PreStage tab controls","The User-Initiated device shows as Unsupervised in its inventory record","The test device was successfully un-enrolled afterward"],
+ challenge:"If you do have access to a real Apple Business Manager or Apple School Manager org, generate and upload the MDM server token and assign one real device to your PreStage.",
+ selfCheck:[
+  {q:"What must be exchanged between Jamf Pro and ABM/ASM to enable Automated Device Enrollment?", a:"An MDM server token."},
+  {q:"Which Jamf Pro object governs the Setup Assistant experience for ADE devices?", a:"A PreStage Enrollment."}
+ ]},
+{id:"lab5", title:"Configuration Profiles & Declarative Management", time:"25–35 min", topic:"Profiles & Declarations",
+ objective:"Build, scope, and remove a configuration profile, and understand how it differs from newer declarative settings.",
+ prereqs:["Your test Mac, enrolled"],
+ steps:[
+  "Computers → Configuration Profiles → New. Add a Restrictions payload with something safe and reversible, like disabling AirDrop.",
+  "Scope it to your test Mac only.",
+  "On the Mac, confirm the restriction actually applied (the option should be greyed out in System Settings).",
+  "Remove the scope (or delete the profile) and confirm the restriction lifts within a few minutes.",
+  "Read up on Declarative Device Management in Jamf Pro's documentation and note the key behavioral difference: declarations report status back from the device, rather than Jamf Pro just pushing and hoping."
+ ],
+ verify:["The restriction visibly appears and then disappears on the test Mac","You can state, in one sentence, how DDM status reporting differs from a traditional pushed profile"],
+ challenge:"Scope two profiles with conflicting settings to the same Mac and see how Jamf Pro/macOS handles (or flags) the conflict.",
+ selfCheck:[
+  {q:"What file format underlies most configuration profile payloads?", a:"A property list (.plist), typically XML."},
+  {q:"What happens to a profile saved with no scope?", a:"It isn't deployed to any device."}
+ ]},
+{id:"lab6", title:"Smart Groups & Extension Attributes", time:"30–40 min", topic:"Smart Groups & EAs",
+ objective:"Create a custom Extension Attribute and use it to drive Smart Group membership.",
+ prereqs:["Your test Mac, enrolled"],
+ steps:[
+  "Settings → Computer Management → Extension Attributes → New. Create a script-based EA — e.g. one that checks free disk space and returns LOW or OK.",
+  "On the test Mac, force an inventory update with `sudo jamf recon`.",
+  "Confirm the EA's value now appears on the computer's inventory record in Jamf Pro.",
+  "Create a Smart Group with criteria: Extension Attribute [yours] is LOW.",
+  "Adjust your script's threshold temporarily (or free up/use disk space) and re-run `sudo jamf recon` to confirm the Mac moves in and out of the Smart Group as expected."
+ ],
+ verify:["The EA value shows correctly on the inventory record","The Smart Group membership updates live as the EA value changes"],
+ challenge:"Scope a policy to that Smart Group so any Mac reporting LOW disk space automatically gets a Self Service cleanup prompt.",
+ selfCheck:[
+  {q:"What are the three main Extension Attribute input types?", a:"Script, text field/pop-up menu, and LDAP mapping."},
+  {q:"Can Smart Group criteria reference a custom Extension Attribute?", a:"Yes — any inventory field, including EAs, can be used."}
+ ]},
+{id:"lab7", title:"Policies — Deployment Workflows End-to-End", time:"40–50 min", topic:"Policies",
+ objective:"Chain multiple payloads into one realistic onboarding-style policy and learn to read the policy log fluently.",
+ prereqs:["Your test Mac", "The package from Lab 2 and the script from Lab 3"],
+ steps:[
+  "Build one policy combining: the package install, the script, and a Self Service icon + description.",
+  "Set execution frequency to Once per computer, trigger to Enrollment Complete, and also enable it in Self Service so it can be run on demand.",
+  "Run it manually from Self Service on the test Mac and watch the policy log update in real time under Computers → [device] → History → Policy Logs.",
+  "Deliberately break it — e.g. point the script at a bad parameter — and re-run to see how Jamf Pro reports the failure.",
+  "Fix the issue and confirm you get back to a clean Completed status."
+ ],
+ verify:["Self Service run completes with a clear success log","You've seen and understood what a Failed policy log looks like, not just a successful one"],
+ challenge:"Add a Files and Processes payload that runs a shell command as the last step, then confirm packages run before scripts by default in the log's execution order.",
+ selfCheck:[
+  {q:"Name two things that can trigger a policy.", a:"Any of: login, logout, check-in, enrollment complete, a custom event, or a set schedule."},
+  {q:"What does 'Once per computer' execution frequency mean?", a:"The policy runs a single time for that computer, ever — as opposed to Ongoing, which reruns it every time the trigger fires."}
+ ]},
+{id:"lab8", title:"Security — FileVault, Permissions & Certificates", time:"30–40 min", topic:"Security & Permissions",
+ objective:"Manage FileVault through Jamf Pro and get comfortable reading POSIX vs. ACL permissions.",
+ prereqs:["Your test Mac, enrolled", "OK to enable FileVault on it (it's a test machine, right?)"],
+ steps:[
+  "Create a configuration profile with the FileVault payload set to enable, escrowing the recovery key to Jamf Pro. Scope it to your test Mac.",
+  "Confirm FileVault status under Computers → [device] → Management → FileVault, and that a recovery key is escrowed (shown redacted).",
+  "In Terminal on the test Mac, run `ls -l` on a folder, then `ls -le` on the same folder and compare — the second reveals any ACL entries layered over the POSIX bits.",
+  "In a browser, check your Jamf Pro server's own certificate (click the padlock) and confirm it's issued by a trusted CA rather than self-signed."
+ ],
+ verify:["FileVault shows Enabled with an escrowed key in the device record","You can explain, out loud, the difference between what `ls -l` and `ls -le` show"],
+ challenge:"Simulate a recovery key rotation (Jamf Pro has a remote command for this) and confirm the new key appears in the device record.",
+ selfCheck:[
+  {q:"What permission model layers on top of POSIX permissions using ACEs?", a:"ACL — Access Control Lists made up of Access Control Entries."},
+  {q:"Why is a self-signed certificate risky on a Jamf Pro server?", a:"It isn't verified by a trusted CA, so trust is left up to (and easy to bypass for) the end user."}
+ ]},
+{id:"lab9", title:"Patch Management & Content Caching", time:"25–35 min", topic:"Patch & Caching",
+ objective:"Track a real software title's patch status and see Content Caching serve a download locally.",
+ prereqs:["Your test Mac with at least one common app installed (a browser works well)", "Optional: a second Apple device on the same network for Content Caching"],
+ steps:[
+  "Computers → Patch Management → Software Titles, and add a title your test Mac already has installed.",
+  "Run an inventory update and confirm Jamf Pro correctly reports the installed version against the latest available.",
+  "Create a Patch Policy for that title targeting your test Mac and review the deployment options (Self Service vs. automatic) without necessarily executing it.",
+  "If you have a second Apple device, enable Content Caching on the Mac (System Settings → General → Sharing) and download something on the second device to confirm it pulls from the cache instead of the internet."
+ ],
+ verify:["The patch title correctly shows installed vs. latest version","You understand the difference between a Patch Policy and a regular Policy"],
+ selfCheck:[
+  {q:"What does Jamf Pro's Patch Management feature actually track?", a:"Available vs. installed versions of a defined software title across the fleet."},
+  {q:"What problem does Content Caching solve?", a:"It reduces bandwidth by serving software/App Store downloads from a local Mac instead of re-fetching them from Apple for every device."}
+ ]},
+{id:"lab99", title:"PRO: Migrating to Declarative Software Updates", time:"45–60 min", topic:"DDM 2026",
+ objective:"Transition away from deprecated legacy MDM commands and implement a DDM-based Software Update enforcement strategy, as mandated by Apple's OS 27 architecture changes.",
+ prereqs:["A Jamf Pro 11.24+ test instance", "A test Mac running macOS 27 beta or later"],
+ steps:[
+  "Navigate to Computers → Declarative Device Management (or Blueprints).",
+  "Create a new Declarative Software Update configuration.",
+  "Set the Target OS version to a specific build (e.g., macOS 27.1).",
+  "Define the enforcement deadline date and time.",
+  "Scope the configuration to a Smart Group of Macs running an older version of OS 27.",
+  "Review the device's status channel in Jamf Pro to verify it reports as 'awaiting configuration' rather than pushing an immediate MDM command."
+ ],
+ verify:["The Mac displays the native Apple 'Update scheduled by administrator' dialog.", "Legacy MDM update policies in your instance have been disabled or deleted."],
+ challenge:"Test how the device behaves when a user attempts to defer the update beyond the specified deadline—the OS should now enforce the installation without reliance on the Jamf binary.",
+ selfCheck:[
+  {q:"Why must you use DDM for software updates in 2026?", a:"Legacy MDM-based Software Update management options were deprecated and completely removed from all Apple 27.0 operating systems."},
+  {q:"How does DDM reporting differ from legacy inventory recon?", a:"DDM uses asynchronous status channels. The device tells the server its state changes immediately, rather than waiting for a scheduled `jamf recon`."}
+ ]
+},
+{id:"lab100", title:"PRO: Secure Log Gathering & POSIX Mechanics", time:"30–45 min", topic:"Scripting",
+ objective:"Write and deploy a log-gathering script that creates a hidden directory inaccessible to standard users, leveraging the root execution context of the Jamf binary.",
+ prereqs:["A Jamf Pro test instance", "A test Mac enrolled and reachable"],
+ steps:[
+  "Write a basic zsh script starting with `#!/bin/zsh`.",
+  "Add the directory creation command: `mkdir -p /Users/Shared/SupportLogs`",
+  "Add a command to lock it down exclusively to the owner: `chmod 700 /Users/Shared/SupportLogs`",
+  "Upload the script to Jamf Pro (Settings → Scripts).",
+  "Deploy it via a Policy triggered by Custom Event `gather_logs`.",
+  "Trigger the policy locally on the test Mac using Terminal: `sudo jamf policy -event gather_logs`.",
+  "Attempt to open the new folder in Finder as a standard user (it should block you with a red 'no access' badge)."
+ ],
+ verify:["The script completes with exit code 0.", "Running `sudo ls -l /Users/Shared` confirms the folder is owned by `root` with `drwx------` permissions."],
+ challenge:"Modify the script to execute `system_profiler SPSoftwareDataType > /Users/Shared/SupportLogs/os_info.txt` so that it actually gathers data before locking the folder.",
+ selfCheck:[
+  {q:"What exactly does the '7' in '700' stand for?", a:"Read (4) + Write (2) + Execute (1) = 7."},
+  {q:"Why does the standard user get locked out if they didn't run the script?", a:"Jamf policies execute as the `root` user in the background. Since root created the folder, root is the owner. '700' grants 0 access to everyone else."}
+ ]
+},
+{id:"lab-sup1", title:"Backup, Migration & Recovery Drill", time:"30–40 min", topic:"Backup & Migration",
+ objective:"Build a real Time Machine backup and explore Recovery and Migration Assistant hands-on, to cement SUP-2026's backup/recovery objectives.",
+ prereqs:["A personal or spare test Mac", "A spare external drive you can erase", "Enough time for one full backup pass"],
+ steps:[
+  "Connect a spare external drive and open System Settings → General → Time Machine.",
+  "Add the drive as a backup disk and let a first full backup complete.",
+  "Open About This Mac → More Info → System Report and note two details you'd ask a customer for during an intake call (e.g. serial number, storage size).",
+  "Boot into macOS Recovery (Apple Silicon: hold the power button at startup; Intel: hold Command-R) and explore Disk Utility and 'Restore From Time Machine Backup' without completing a restore.",
+  "Back in normal macOS, open Migration Assistant and walk through its screens (without completing a migration) to see exactly what it offers to transfer."
+ ],
+ verify:["A completed Time Machine backup shows on the external drive with a recent timestamp","You can explain out loud the difference between what Time Machine backs up and what Migration Assistant moves onto a Mac","You successfully reached the Recovery environment"],
+ selfCheck:[
+  {q:"Which tool builds ongoing local backups, and which tool moves that data onto a new or freshly erased Mac?", a:"Time Machine builds the backups; Migration Assistant is what moves that data onto the Mac."},
+  {q:"How do you enter Recovery on an Apple Silicon Mac?", a:"Press and hold the power button at startup until 'Loading startup options' appears."}
+ ]},
+{id:"lab-sup2", title:"Diagnosing a Networking Complaint", time:"25–35 min", topic:"Networking",
+ objective:"Walk a realistic 'can't connect to Wi-Fi' support call end-to-end using only built-in macOS tools.",
+ prereqs:["A Mac connected to a Wi-Fi network you're allowed to test on"],
+ steps:[
+  "Option-click the Wi-Fi icon in the menu bar and choose 'Open Wireless Diagnostics'.",
+  "Let it monitor briefly, then review the summary it produces about signal strength and nearby networks.",
+  "Open System Settings → Wi-Fi, click the (i) next to your network, and note the details shown (IP address, router, DNS).",
+  "In Terminal, run `ping -c 5 8.8.8.8` then `ping -c 5 apple.com` to separate a general connectivity issue from a DNS issue.",
+  "'Forget' the Wi-Fi network in System Settings, then rejoin it fresh, re-entering the password.",
+  "Write a two-sentence summary as if explaining the issue and fix to a non-technical customer."
+ ],
+ verify:["You can locate Wireless Diagnostics without help","You can articulate the difference between a connectivity failure and a DNS failure using the two ping results","Your customer-facing summary avoids unexplained jargon"],
+ selfCheck:[
+  {q:"What's a good first troubleshooting step when a Mac sees a Wi-Fi network but won't join it?", a:"Forget the network and rejoin, re-entering the password."},
+  {q:"What does pinging an IP address like 8.8.8.8 versus a domain like apple.com help you isolate?", a:"It helps separate a raw connectivity problem from a DNS resolution problem."}
+ ]},
+{id:"lab-dep1", title:"Exploring Apple Business Manager & Apps and Books", time:"30–40 min", topic:"ABM/ASM & MDM",
+ objective:"Get hands-on with Apple Business Manager's structure — the foundation every DEP-2026 topic builds on — even without a full MDM deployment.",
+ prereqs:["A free Apple Business Manager or Apple School Manager sign-up at business.apple.com or school.apple.com (a D-U-N-S number or school affiliation may be required)", "Alternatively, review the public Apple Business Manager User Guide if you can't get an account approved quickly"],
+ steps:[
+  "Sign in to business.apple.com (or read the User Guide's structure if you don't have access yet).",
+  "Locate where you'd add/link an MDM server and generate a server token — you don't need to complete this with a real MDM.",
+  "Find the Apps and Books section and note the difference between device-based and user-based assignment as described in the interface or documentation.",
+  "Locate where Managed Apple Accounts or Federated Authentication would be configured for your organization.",
+  "Find where a device's enrollment status (ADE) would be checked once it's purchased through a participating source."
+ ],
+ verify:["You can point to where an MDM server token is generated","You can explain out loud the difference between device-based and user-based app assignment"],
+ challenge:"If you have a spare Apple device, walk through Apple Configurator's 'Add to Apple Business Manager' flow, assigning it to a placeholder MDM server token.",
+ selfCheck:[
+  {q:"What must exist before ADE or volume app purchasing can be used at all?", a:"An Apple Business Manager or Apple School Manager account."},
+  {q:"Which app assignment method avoids needing an Apple Account signed in on the device?", a:"Device-based assignment."}
+ ]},
+{id:"lab-dep2", title:"Apple Configurator: Manual Supervision & Profiles", time:"25–35 min", topic:"Enrollment",
+ objective:"Use Apple Configurator to manually supervise a device and install a profile — the same mechanics ADE automates at scale.",
+ prereqs:["A Mac with Apple Configurator installed (free on the Mac App Store)","A personal, fully erasable iPhone or iPad connected via USB","Willingness to erase that test device"],
+ steps:[
+  "Open Apple Configurator on the Mac and connect the test device via USB.",
+  "Select the device and choose Prepare, walking through the 'Manual Configuration' path (not linked to an organization's MDM) to see the supervision prompts.",
+  "Complete the prepare flow and confirm the device now shows as Supervised in Configurator.",
+  "Create a simple configuration profile in Configurator (e.g. a Restrictions payload disabling the camera) and apply it to the device.",
+  "Confirm the restriction took effect on the device, then remove the profile from Configurator and confirm it's lifted.",
+  "When done, erase the test device to remove supervision before returning it to normal use."
+ ],
+ verify:["Configurator shows the device as Supervised","The applied restriction (e.g. disabled camera) is visibly in effect on the device","Removing the profile lifts the restriction immediately"],
+ selfCheck:[
+  {q:"What underlying file format do configuration profiles use?", a:"A property list (.plist)."},
+  {q:"What tool manually supervises a device outside of ADE, useful for testing?", a:"Apple Configurator."}
+ ]},
+{id:"lab-svc1", title:"ESD-Safe Workspace & Intake Practice", time:"20–30 min", topic:"ESD Precautions",
+ objective:"Build the habits SVC-19A actually tests — a properly grounded workspace and a clean customer intake conversation — before ever touching a real repair.",
+ prereqs:["A notepad or the Notes app", "Optional: an anti-static mat/wrist strap if you own one"],
+ steps:[
+  "List every ESD precaution you'd take before opening a device: grounding method, mat, avoiding synthetic clothing, and clearing the immediate work area.",
+  "Write a two-minute mock intake script for a customer dropping off a device with a cracked screen: how you'd confirm the issue, mention data-loss risk, and set expectations on cost/turnaround.",
+  "Write out what you'd check first (serial number lookup, warranty/AppleCare status) before quoting any price.",
+  "Role-play the mock intake out loud, or with a friend, timing yourself to keep it concise and non-jargon-heavy.",
+  "List two intake red flags (e.g. a swollen battery, a liquid-damage indicator) that would change your safety approach before opening the device."
+ ],
+ verify:["Your written ESD checklist covers grounding, mat, and clothing/material precautions","Your mock intake script mentions data-loss risk and coverage/cost before any work would begin","You can name at least one safety-relevant thing you'd check before opening a device"],
+ selfCheck:[
+  {q:"What's the biggest customer-experience mistake to avoid during intake?", a:"Starting a repair, or quoting cost, without first confirming coverage status and warning about data-loss risk."},
+  {q:"Why avoid synthetic clothing in an ESD-sensitive work area?", a:"It generates and holds a static charge more readily than natural fibers."}
+ ]}
+];
+
+/* ================= EXAM METADATA ================= */
+const EXAM_META = {
+  100:{shortLabel:"JAMF 100", fullLabel:"Jamf 100 · Associate"},
+  200:{shortLabel:"JAMF 200", fullLabel:"Jamf 200 · Tech"},
+  999:{shortLabel:"PRO TIER", fullLabel:"Jamf Pro Tier · 2026 DDM"},
+  300:{shortLabel:"SUP-2026", fullLabel:"Apple Device Support (SUP-2026)"},
+  400:{shortLabel:"DEP-2026", fullLabel:"Apple Deployment & Management (DEP-2026)"},
+  500:{shortLabel:"SVC FUND.", fullLabel:"Apple Service Fundamentals (SVC-19A)"}
+};
+function examLabel(examNum){ return (EXAM_META[examNum] && EXAM_META[examNum].shortLabel) || String(examNum); }
+function examFullLabel(examNum){ return (EXAM_META[examNum] && EXAM_META[examNum].fullLabel) || String(examNum); }
+function examTagClass(examNum){ return "t"+examNum; }
+function labExamNum(lab){
+  if(lab.id.startsWith("lab-sup")) return 300;
+  if(lab.id.startsWith("lab-dep")) return 400;
+  if(lab.id.startsWith("lab-svc")) return 500;
+  if(lab.id.startsWith("lab9") || lab.id==="lab100") return 999;
+  return 200;
+}
+
+/* ================= STATE ================= */
+let state={
+  mode:'study', track:'all', topics:new Set(),
+  deck:[], idx:0, flipped:false, shuffleOn:true,
+  mastery:{}, 
+  mockHistory: [],
+  mock:null, 
+  labProgress:{}, 
+  activeLab:null,
+  openSelfCheck:null
+};
+
+/* ================= STORAGE ================= */
+async function loadProgress(){
+  try{
+    const saved = localStorage.getItem('jamf-progress');
+    if(saved){
+      const parsed = JSON.parse(saved);
+      state.mastery = parsed.mastery || {};
+      state.mockHistory = parsed.mockHistory || [];
+      state.labProgress = parsed.labProgress || {};
+    }
+  }catch(e){ console.warn('Could not load local progress:', e); }
+}
+async function saveProgress(){
+  try{
+    localStorage.setItem('jamf-progress', JSON.stringify({
+      mastery:state.mastery, 
+      mockHistory:state.mockHistory, 
+      labProgress:state.labProgress
+    }));
+  }catch(e){ console.warn('Could not save local progress:', e); }
+}
+
+/* ================= HELPERS ================= */
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function filteredData(){
+  return DATA.filter(d=>{
+    if(state.track!=='all' && d.exam!==Number(state.track)) return false;
+    if(state.topics.size>0 && !state.topics.has(d.topic)) return false;
+    return true;
+  });
+}
+function topicsForTrack(){
+  const src = state.track==='all' ? DATA : DATA.filter(d=>d.exam===Number(state.track));
+  return [...new Set(src.map(d=>d.topic))];
+}
+function letters(i){return String.fromCharCode(65+i);}
+
+/* ================= SIDEBAR RENDER ================= */
+function renderSidebar(){
+  document.querySelectorAll('.track-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.track===state.track);
+  });
+  const chipList=document.getElementById('chipList');
+  const topics=topicsForTrack();
+  chipList.innerHTML = topics.map(t=>
+    `<div class="chip ${state.topics.has(t)?'active':''}" data-topic="${t}">${t}</div>`
+  ).join('') || '<span style="color:var(--text-faint);font-size:12px;">No topics</span>';
+  chipList.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click',()=>{
+      const t=c.dataset.topic;
+      if(state.topics.has(t)) state.topics.delete(t); else state.topics.add(t);
+      onFilterChange();
+    });
+  });
+  renderBadgeRing();
+}
+function renderBadgeRing(){
+  const pool=filteredData();
+  const known=pool.filter(d=>state.mastery[d.id]==='known').length;
+  const pct = pool.length ? Math.round((known/pool.length)*100) : 0;
+  const circumference = 2*Math.PI*44;
+  const offset = circumference - (pct/100)*circumference;
+  document.getElementById('ringFill').style.strokeDasharray=circumference;
+  document.getElementById('ringFill').style.strokeDashoffset=offset;
+  document.getElementById('ringPct').textContent=pct+'%';
+  document.getElementById('ringSub').textContent=`${known} of ${pool.length} cards mastered`;
+}
+
+function onFilterChange(){
+  renderSidebar();
+  if(state.mode==='study') buildDeck();
+  render();
+}
+
+/* ================= STUDY MODE ================= */
+function buildDeck(){
+  let pool = filteredData();
+  if(state.shuffleOn) pool = shuffle(pool);
+  state.deck = pool;
+  state.idx = 0;
+  state.flipped = false;
+}
+function markCard(status){
+  const card = state.deck[state.idx];
+  if(!card) return;
+  state.mastery[card.id]=status;
+  saveProgress();
+  renderBadgeRing();
+  goNext();
+}
+function goNext(){
+  state.flipped=false;
+  if(state.idx < state.deck.length-1){ state.idx++; } 
+  render();
+}
+function goPrev(){
+  state.flipped=false;
+  if(state.idx>0){ state.idx--; }
+  render();
+}
+function renderStudy(){
+  const stage=document.getElementById('stage');
+  const planOpen = stage.querySelector('.plan-body.open') ? true : false;
+
+  if(state.deck.length===0){
+    stage.innerHTML = planHtml(planOpen) + `<div class="empty-state">No cards match this filter.<br><b>Try selecting a different track or fewer topics.</b></div>`;
+    attachPlanToggle();
+    return;
+  }
+  const card = state.deck[state.idx];
+  const status = state.mastery[card.id] || 'new';
+  const pct = ((state.idx+1)/state.deck.length)*100;
+
+  let labelText = examLabel(card.exam);
+
+  stage.innerHTML = planHtml(planOpen) + `
+    <div class="stage-top">
+      <div class="stage-counter">CARD ${state.idx+1} / ${state.deck.length}</div>
+      <div class="stage-controls">
+        <button class="icon-btn ${state.shuffleOn?'on':''}" id="shuffleBtn">⇄ shuffle</button>
+      </div>
+    </div>
+    <div class="progressbar"><div class="progressbar-fill" style="width:${pct}%"></div></div>
+
+    <div class="flashcard-outer">
+      <div class="flashcard ${state.flipped?'flipped':''}" id="flashcard">
+        <div class="face front">
+          <div class="face-top">
+            <div class="tag-group">
+              <span class="exam-tag t${card.exam}">${labelText}</span>
+              <span class="topic-tag">${card.topic}</span>
+            </div>
+            <span class="status-led ${status}" title="${status}"></span>
+          </div>
+          <div class="face-label">Question</div>
+          <div class="face-content">${card.q}</div>
+          <div class="face-hint">Click card, or press space, to flip</div>
+        </div>
+        <div class="face back">
+          <div class="face-top">
+            <div class="tag-group">
+              <span class="exam-tag t${card.exam}">${labelText}</span>
+              <span class="topic-tag">${card.topic}</span>
+            </div>
+            <span class="status-led ${status}"></span>
+          </div>
+          <div class="face-label">Answer</div>
+          <div class="face-content">${card.options[0]}
+            ${card.note ? `<div class="face-note">${card.note}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mark-row">
+      <button class="mark-btn learning" id="markLearning">Still learning</button>
+      <button class="mark-btn known" id="markKnown">Got it</button>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-arrow" id="prevBtn" ${state.idx===0?'disabled':''}>← Previous</button>
+      <button class="nav-arrow" id="nextBtn" ${state.idx===state.deck.length-1?'disabled':''}>Next →</button>
+    </div>
+  `;
+  attachPlanToggle();
+  document.getElementById('flashcard').addEventListener('click',()=>{state.flipped=!state.flipped; render();});
+  document.getElementById('shuffleBtn').addEventListener('click',()=>{state.shuffleOn=!state.shuffleOn; buildDeck(); render();});
+  document.getElementById('markLearning').addEventListener('click',(e)=>{e.stopPropagation();markCard('learning');});
+  document.getElementById('markKnown').addEventListener('click',(e)=>{e.stopPropagation();markCard('known');});
+  document.getElementById('prevBtn').addEventListener('click',(e)=>{e.stopPropagation();goPrev();});
+  document.getElementById('nextBtn').addEventListener('click',(e)=>{e.stopPropagation();goNext();});
+}
+
+function planHtml(open){
+  return `
+  <div class="plan-toggle" id="planToggle">
+    <span class="plan-toggle-title">📋 7-Day Study Plan &amp; Exam Facts</span>
+    <span class="plan-toggle-arrow" id="planArrow">${open?'▲':'▼'}</span>
+  </div>
+  <div class="plan-body ${open?'open':''}" id="planBody">
+    <ol>
+      <li><b>Jamf 200 format.</b> Instructor-led 4-day course + proctored exam. Earning this badge is critical for enterprise Apple management roles.</li>
+      <li><b>The Pro Tier approach.</b> Switch the track to "Pro Tier" to simulate complex real-world workflows that blend POSIX permissions, server logic, and the WWDC 2026 Declarative Device Management (DDM) mandates.</li>
+      <li><b>The Apple IT path.</b> SUP-2026 (Apple Device Support) is a prerequisite for DEP-2026 (Apple Deployment and Management) — pass both to earn Apple Certified IT Professional. Both are delivered remotely via Pearson OnVUE; take them on a clean, unmanaged Mac.</li>
+      <li><b>The repair-technician path.</b> SVC-19A (Apple Service Fundamentals) — SVC-16A is an earlier, now-retired version of the same prerequisite — gates entry to the Apple Certified iOS Technician and Apple Certified Mac Technician exams. It leans heavily on customer experience, ESD/safety, and product knowledge, not just technical recall.</li>
+      <li><b>Execution over memorization.</b> Don't just memorize the cards. If a card references <code>chmod 700</code>, make sure you understand the math behind the 7 (4+2+1).</li>
+    </ol>
+    <div class="fact-row">
+      <span class="fact-pill">Jamf 100 exam: 50 MCQ · 60 min · 80% to pass · $100</span>
+      <span class="fact-pill">Jamf 200: instructor-led 4-day course + proctored exam</span>
+      <span class="fact-pill">Jamf 100 completion is the recommended prep for Jamf 200</span>
+      <span class="fact-pill">Badges valid 3 years</span>
+      <span class="fact-pill">SUP-2026 + DEP-2026 = Apple Certified IT Professional</span>
+      <span class="fact-pill">DEP-2026 requires passing SUP-2026 first</span>
+      <span class="fact-pill">SVC-19A: ~70 items · 2 hrs · 80% overall to pass</span>
+      <span class="fact-pill">SVC-19A/18A prerequisite for ACiT &amp; ACMT technician exams</span>
+    </div>
+  </div>`;
+}
+function attachPlanToggle(){
+  const t=document.getElementById('planToggle');
+  if(!t) return;
+  t.addEventListener('click',()=>{
+    const body=document.getElementById('planBody');
+    const arrow=document.getElementById('planArrow');
+    body.classList.toggle('open');
+    arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+  });
+}
+
+/* ================= MOCK TEST MODE ================= */
+function renderMockSetup(){
+  const stage=document.getElementById('stage');
+  const pool=filteredData();
+  const maxCount=pool.length;
+  const options=[10,20,30].filter(n=>n<=maxCount);
+  if(maxCount>0 && !options.includes(maxCount)) options.push(maxCount);
+  stage.innerHTML=`
+    <div class="mock-setup">
+      <h3>Mock Test</h3>
+      <p>Pulls from your current track/topic filter (${maxCount} question${maxCount===1?'':'s'} available). Timed at ~72 seconds per question, a solid general pace across the Jamf and Apple multiple-choice exams. A score of 80% or higher is a pass.</p>
+      <div class="setup-row" id="countRow">
+        ${options.map(n=>`<button class="count-btn" data-count="${n}">${n} questions</button>`).join('')}
+      </div>
+      <button class="start-btn" id="startMockBtn" ${maxCount===0?'disabled':''}>Start Mock Test</button>
+    </div>`;
+  let chosen = options[0]||0;
+  const countBtns=stage.querySelectorAll('.count-btn');
+  countBtns.forEach((b,i)=>{
+    if(i===0) b.classList.add('active');
+    b.addEventListener('click',()=>{
+      countBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      chosen=Number(b.dataset.count);
+    });
+  });
+  document.getElementById('startMockBtn').addEventListener('click',()=>startMock(chosen));
+}
+
+function startMock(count){
+  const pool=shuffle(filteredData()).slice(0,count);
+  const queue=pool.map(d=>{
+    const opts = shuffle(d.options.map((o,i)=>({text:o,correct:i===0})));
+    return {...d, shuffledOptions:opts};
+  });
+  state.mock={
+    queue, index:0, answers:{}, total:count,
+    timeLeft: count*72, timerId:null
+  };
+  if(state.mock.timerId) clearInterval(state.mock.timerId);
+  state.mock.timerId=setInterval(()=>{
+    state.mock.timeLeft--;
+    if(state.mock.timeLeft<=0){ clearInterval(state.mock.timerId); submitMock(); return; }
+    updateTimerDisplay();
+  },1000);
+  render();
+}
+function updateTimerDisplay(){
+  const el=document.getElementById('mockTimer');
+  if(!el || !state.mock) return;
+  const t=state.mock.timeLeft;
+  const m=Math.floor(t/60), s=t%60;
+  el.textContent=`⏱ ${m}:${s.toString().padStart(2,'0')}`;
+  el.classList.toggle('low', t<60);
+}
+function selectMockOption(qIndex, optText){
+  state.mock.answers[qIndex]=optText;
+  render();
+}
+function mockNav(delta){
+  state.mock.index=Math.max(0,Math.min(state.mock.queue.length-1,state.mock.index+delta));
+  render();
+}
+function submitMock(){
+  if(state.mock.timerId) clearInterval(state.mock.timerId);
+  let correctCount=0;
+  const byTopic={};
+  state.mock.queue.forEach((q,i)=>{
+    const ans=state.mock.answers[i];
+    const correctOpt = q.shuffledOptions.find(o=>o.correct);
+    const isCorrect = ans===correctOpt.text;
+    if(isCorrect) correctCount++;
+    byTopic[q.topic]=byTopic[q.topic]||{correct:0,total:0};
+    byTopic[q.topic].total++;
+    if(isCorrect) byTopic[q.topic].correct++;
+  });
+  const scorePct = Math.round((correctCount/state.mock.total)*100);
+  state.mock.finished=true;
+  state.mock.score=correctCount;
+  state.mock.scorePct=scorePct;
+  state.mock.byTopic=byTopic;
+  state.mockHistory.unshift({
+    date:new Date().toISOString(), track:state.track, total:state.mock.total,
+    score:correctCount, scorePct
+  });
+  state.mockHistory=state.mockHistory.slice(0,20);
+  saveProgress();
+  try{ localStorage.setItem('exam-closed', new Date().toISOString()); }catch(e){}
+  render();
+}
+function renderMockQuestion(){
+  const stage=document.getElementById('stage');
+  const m=state.mock;
+  const q=m.queue[m.index];
+  const answered=m.answers[m.index];
+  let labelText = examLabel(q.exam);
+
+  stage.innerHTML=`
+    <div class="mock-top">
+      <div class="stage-counter">QUESTION ${m.index+1} / ${m.total}</div>
+      <div class="timer" id="mockTimer">⏱ --:--</div>
+    </div>
+    <div class="progressbar"><div class="progressbar-fill" style="width:${((m.index+1)/m.total)*100}%"></div></div>
+    <div class="q-card">
+      <div class="tag-group" style="margin-bottom:10px;">
+        <span class="exam-tag t${q.exam}">${labelText}</span>
+        <span class="topic-tag">${q.topic}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      ${q.shuffledOptions.map((o,i)=>`
+        <div class="opt ${answered===o.text?'selected':''}" data-opt="${i}">
+          <span class="opt-letter">${letters(i)}</span><span>${o.text}</span>
+        </div>`).join('')}
+    </div>
+    <div class="mock-nav">
+      <button class="nav-arrow" id="mPrev" ${m.index===0?'disabled':''}>← Previous</button>
+      ${m.index===m.total-1
+        ? `<button class="submit-btn" id="mSubmit">Submit Test</button>`
+        : `<button class="nav-arrow" id="mNext">Next →</button>`}
+    </div>
+  `;
+  updateTimerDisplay();
+  stage.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click',()=>selectMockOption(m.index, q.shuffledOptions[Number(el.dataset.opt)].text));
+  });
+  const prevBtn=document.getElementById('mPrev'); if(prevBtn) prevBtn.addEventListener('click',()=>mockNav(-1));
+  const nextBtn=document.getElementById('mNext'); if(nextBtn) nextBtn.addEventListener('click',()=>mockNav(1));
+  const subBtn=document.getElementById('mSubmit'); if(subBtn) subBtn.addEventListener('click',submitMock);
+}
+function renderMockResults(){
+  const stage=document.getElementById('stage');
+  const m=state.mock;
+  const pass=m.scorePct>=80;
+  const topics=Object.keys(m.byTopic);
+  stage.innerHTML=`
+    <div class="results-head">
+      <div class="score-big ${pass?'pass':'fail'}">${m.scorePct}%</div>
+      <div class="results-sub">${m.score} of ${m.total} correct — ${pass?'PASS (80%+ threshold)':'Below the 80% pass threshold'}</div>
+    </div>
+    <div class="section-title">Score by topic</div>
+    <div class="topic-breakdown">
+      ${topics.map(t=>{
+        const d=m.byTopic[t]; const pct=Math.round((d.correct/d.total)*100);
+        return `<div class="tb-row">
+          <div class="tb-label">${t}</div>
+          <div class="tb-bar"><div class="tb-fill" style="width:${pct}%"></div></div>
+          <div class="tb-frac">${d.correct}/${d.total}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="section-title">Review</div>
+    <div id="reviewList">
+      ${m.queue.map((q,i)=>{
+        const ans=m.answers[i];
+        const correctOpt=q.shuffledOptions.find(o=>o.correct);
+        const wasCorrect=ans===correctOpt.text;
+        return `<div class="review-item">
+          <div class="review-q">${i+1}. ${q.q}</div>
+          <div class="review-a ${wasCorrect?'right-line':'wrong-line'}">Your answer: ${ans || '(skipped)'} ${wasCorrect?'✓':'✗'}</div>
+          ${!wasCorrect ? `<div class="review-a right-line">Correct: ${correctOpt.text}</div>` : ''}
+          ${q.note ? `<div class="face-note" style="border:none;padding-top:6px;margin-top:6px;">${q.note}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="nav-row" style="margin-top:6px;">
+      <button class="nav-arrow" id="retakeBtn">Finish and close exam</button>
+    </div>
+  `;
+  document.getElementById('retakeBtn').addEventListener('click',()=>{ showClosed(); });
+}
+function renderMock(){
+  if(!state.mock){ renderMockSetup(); return; }
+  if(state.mock.finished){ renderMockResults(); return; }
+  renderMockQuestion();
+}
+
+/* ================= LABS MODE ================= */
+function labStepCount(lab){ return lab.steps.length; }
+function labDoneCount(lab){
+  let n=0;
+  for(let i=0;i<lab.steps.length;i++){ if(state.labProgress[lab.id+'-'+i]) n++; }
+  return n;
+}
+function toggleStep(labId, stepIdx){
+  const key=labId+'-'+stepIdx;
+  state.labProgress[key] = !state.labProgress[key];
+  saveProgress();
+  render();
+}
+function toggleSelfCheck(key){
+  state.openSelfCheck = state.openSelfCheck===key ? null : key;
+  render();
+}
+function openLab(labId){
+  state.activeLab=labId;
+  render();
+}
+function renderLabs(){
+  if(state.activeLab){ renderLabDetail(state.activeLab); }
+  else{ renderLabList(); }
+}
+const LAB_COLOR_VAR = {999:'--accent-pro', 300:'--accent-300', 400:'--accent-400', 500:'--accent-500'};
+function labColorVar(examNum){ return LAB_COLOR_VAR[examNum] || null; }
+function renderLabList(){
+  const stage=document.getElementById('stage');
+  const totalSteps = LABS.reduce((s,l)=>s+labStepCount(l),0);
+  const doneSteps = LABS.reduce((s,l)=>s+labDoneCount(l),0);
+  const overallPct = totalSteps ? Math.round((doneSteps/totalSteps)*100) : 0;
+
+  stage.innerHTML = `
+    <div class="lab-intro">
+      🔧 <b>${LABS.length} hands-on labs</b> across every track — real work on live Jamf Pro / Apple tools, not just recall. Most need only a free Jamf trial or Apple Configurator, plus a spare, fully erasable test device.
+      <br><br>Overall lab progress: <b>${overallPct}%</b> (${doneSteps}/${totalSteps} steps checked off)
+    </div>
+    <div class="lab-progress-top"><div class="lab-progress-top-fill" style="width:${overallPct}%"></div></div>
+    <div class="lab-grid">
+      ${LABS.map((lab,i)=>{
+        const done=labDoneCount(lab), total=labStepCount(lab);
+        const pct = total ? Math.round((done/total)*100) : 0;
+        const colorVar = labColorVar(labExamNum(lab));
+        return `<div class="lab-card" data-lab="${lab.id}">
+          <div class="lab-num" style="${colorVar ? `color:var(${colorVar})` : ''}">${i+1}</div>
+          <div class="lab-info">
+            <div class="lab-title">${lab.title}</div>
+            <div class="lab-meta">${lab.time} · ${lab.topic}${pct===100?' · ✅ complete':''}</div>
+          </div>
+          <div class="lab-mini-bar"><div class="lab-mini-fill" style="width:${pct}%;${colorVar ? `background:var(${colorVar})` : ''}"></div></div>
+          <div class="lab-pct">${pct}%</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  stage.querySelectorAll('.lab-card').forEach(c=>{
+    c.addEventListener('click',()=>openLab(c.dataset.lab));
+  });
+}
+function renderLabDetail(labId){
+  const stage=document.getElementById('stage');
+  const lab=LABS.find(l=>l.id===labId);
+  const done=labDoneCount(lab), total=labStepCount(lab);
+  const pct = total ? Math.round((done/total)*100) : 0;
+  const examNum = labExamNum(lab);
+  const colorVar = labColorVar(examNum);
+  const labelStyle = colorVar ? `color:var(${colorVar})` : '';
+  const challengeStyle = colorVar ? `background:color-mix(in srgb, var(${colorVar}) 8%, transparent);border-color:color-mix(in srgb, var(${colorVar}) 25%, transparent);` : '';
+
+  stage.innerHTML = `
+    <button class="lab-back" id="labBackBtn">← All labs</button>
+    <div class="lab-progress-top"><div class="lab-progress-top-fill" style="width:${pct}%;${colorVar ? `background:var(${colorVar})` : ''}"></div></div>
+    <div class="lab-detail-head">
+      <div class="tag-group" style="margin-bottom:8px;">
+        <span class="exam-tag ${examTagClass(examNum)}">${examLabel(examNum)}</span>
+        <span class="topic-tag">${lab.topic} · ${lab.time}</span>
+      </div>
+      <div class="lab-detail-title">${lab.title}</div>
+      <div class="lab-detail-obj">${lab.objective}</div>
+    </div>
+
+    <div class="lab-section-label" style="${labelStyle}">Before you start</div>
+    <ul class="prereq-list">${lab.prereqs.map(p=>`<li>${p}</li>`).join('')}</ul>
+
+    <div class="lab-section-label" style="${labelStyle}">Steps (${done}/${total} done)</div>
+    ${lab.steps.map((s,i)=>{
+      const doneStep = !!state.labProgress[lab.id+'-'+i];
+      return `<div class="step-item ${doneStep?'done':''}" data-step="${i}">
+        <div class="step-check">✓</div>
+        <div class="step-text ${doneStep?'done-text':''}">${i+1}. ${s}</div>
+      </div>`;
+    }).join('')}
+
+    <div class="lab-section-label" style="${labelStyle}">Verify</div>
+    <div class="verify-box">
+      <span class="vb-title">YOU'RE DONE WHEN</span>
+      <ul>${lab.verify.map(v=>`<li>${v}</li>`).join('')}</ul>
+    </div>
+
+    ${lab.challenge ? `<div class="challenge-box" style="${challengeStyle}"><span class="cb-title" style="${labelStyle}">STRETCH CHALLENGE</span>${lab.challenge}</div>` : ''}
+
+    <div class="lab-section-label" style="${labelStyle}">Self-check</div>
+    ${lab.selfCheck.map((sc,i)=>{
+      const key=lab.id+'-sc'+i;
+      const open = state.openSelfCheck===key;
+      return `<div class="selfcheck-item">
+        <div class="sc-q" data-sckey="${key}">${sc.q}<span style="color:var(--text-faint);">${open?'−':'+'}</span></div>
+        <div class="sc-a ${open?'open':''}">${sc.a}</div>
+      </div>`;
+    }).join('')}
+  `;
+  document.getElementById('labBackBtn').addEventListener('click',()=>{state.activeLab=null; render();});
+  stage.querySelectorAll('.step-item').forEach(el=>{
+    el.addEventListener('click',()=>toggleStep(lab.id, Number(el.dataset.step)));
+  });
+  stage.querySelectorAll('.sc-q').forEach(el=>{
+    el.addEventListener('click',()=>toggleSelfCheck(el.dataset.sckey));
+  });
+}
+
+/* ================= PROGRESS MODE ================= */
+const EXAM_COLOR_VAR = {100:'--accent-100', 200:'--accent-200', 999:'--accent-pro', 300:'--accent-300', 400:'--accent-400', 500:'--accent-500'};
+function examColorVar(examNum){ return EXAM_COLOR_VAR[examNum] || '--accent-200'; }
+function renderProgress(){
+  const stage = document.getElementById('stage');
+  const trackNums = [...new Set(DATA.map(d=>d.exam))].sort((a,b)=>a-b);
+  const mockCount = state.mockHistory.length;
+  const avgScore = mockCount ? Math.round(state.mockHistory.reduce((s,h)=>s+h.scorePct,0)/mockCount) : 0;
+
+  const trackStatBoxes = trackNums.map(num=>{
+    const known = DATA.filter(d=>d.exam===num && state.mastery[d.id]==='known').length;
+    const total = DATA.filter(d=>d.exam===num).length;
+    return `<div class="stat-box"><div class="stat-num" style="color:var(${examColorVar(num)})">${known}/${total}</div><div class="stat-label">${examLabel(num)} MASTERED</div></div>`;
+  }).join('');
+
+  const topicStats = [...new Set(DATA.map(d=>d.topic))].map(t=>{
+    const items = DATA.filter(d=>d.topic===t);
+    const known = items.filter(d=>state.mastery[d.id]==='known').length;
+    return {topic:t, known, total:items.length, exam:items[0].exam};
+  }).sort((a,b)=>a.exam-b.exam || (a.known/a.total)-(b.known/b.total));
+
+  // Build HTML strings outside of the main template literal to avoid escaping conflicts
+  let historyHtml = '';
+  if (state.mockHistory.length === 0) {
+    historyHtml = `<div class="empty-state" style="padding:24px;">No mock tests taken yet.</div>`;
+  } else {
+    historyHtml = state.mockHistory.map(h => {
+      const d = new Date(h.date);
+      const isPass = h.scorePct >= 80;
+      const radius = 16;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (h.scorePct / 100) * circumference;
+
+      return `
+        <div class="history-item">
+          <div class="history-info">
+            <span class="history-title">${h.track==='all' ? 'Mixed Practice Exam' : examLabel(Number(h.track)) + ' Mock Test'}</span>
+            <span class="history-meta">${d.toLocaleDateString()} · ${h.total} questions</span>
+          </div>
+          <div class="history-score-wrap">
+            <span class="h-status ${isPass ? 'h-pass' : 'h-fail'}">${isPass ? 'PASS' : 'FAIL'}</span>
+            <div class="mini-ring">
+              <svg viewBox="0 0 42 42">
+                <circle class="bg" cx="21" cy="21" r="${radius}"></circle>
+                <circle class="fg ${isPass ? 'pass' : 'fail'}" cx="21" cy="21" r="${radius}" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" data-target-offset="${offset}" stroke-linecap="round"></circle>
+              </svg>
+              <div class="mini-ring-text ${isPass ? 'h-pass' : 'h-fail'}">${h.scorePct}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  let topicHtml = topicStats.map(t => {
+    const pct = t.total ? Math.round((t.known/t.total)*100) : 0;
+    const bg = `var(${examColorVar(t.exam)})`;
+    const label = examLabel(t.exam);
+
+    return `
+      <div class="tb-row">
+        <div class="tb-label"><span class="exam-tag ${examTagClass(t.exam)}" style="margin-right:6px;">${label}</span>${t.topic}</div>
+        <div class="tb-bar"><div class="tb-fill" style="width:${pct}%;background:${bg}"></div></div>
+        <div class="tb-frac">${t.known}/${t.total}</div>
+      </div>`;
+  }).join('');
+
+  stage.innerHTML = `
+    <div class="stat-grid">
+      ${trackStatBoxes}
+      <div class="stat-box"><div class="stat-num">${mockCount ? avgScore+'%' : '—'}</div><div class="stat-label">AVG MOCK SCORE (${mockCount})</div></div>
+      <div class="stat-box"><div class="stat-num">${LABS.filter(l=>labDoneCount(l)===labStepCount(l)).length}/${LABS.length}</div><div class="stat-label">LABS COMPLETED</div></div>
+    </div>
+
+    <div class="section-title">Mastery by topic</div>
+    <div class="topic-breakdown">
+      ${topicHtml}
+    </div>
+
+    <div class="section-title">Mock test history</div>
+    ${historyHtml}
+  `;
+
+  // Animate the SVG rings filling up
+  setTimeout(() => {
+    const rings = stage.querySelectorAll('.mini-ring .fg');
+    rings.forEach(ring => {
+      ring.style.strokeDashoffset = ring.getAttribute('data-target-offset');
+    });
+  }, 20);
+}
+
+/* ================= MASTER RENDER ================= */
+function render(){
+  const stage = document.getElementById('stage');
+  stage.classList.remove('animate-in');
+  
+  setTimeout(() => {
+    if(state.mode==='study') renderStudy();
+    else if(state.mode==='labs') renderLabs();
+    else if(state.mode==='mock') renderMock();
+    else renderProgress();
+    
+    stage.classList.add('animate-in');
+  }, 10);
+}
+
+/* ================= EVENTS ================= */
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.mode=btn.dataset.mode;
+    if(state.mode==='study' && state.deck.length===0) buildDeck();
+    render();
+  });
+});
+document.querySelectorAll('.track-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    state.track=btn.dataset.track;
+    state.topics.clear();
+    state.mock=null;
+    onFilterChange();
+    if(state.mode==='study') buildDeck();
+    render();
+  });
+});
+document.getElementById('resetBtn').addEventListener('click',async ()=>{
+  const rb=document.getElementById('resetBtn');
+  if(rb.dataset.arm!=='1'){ rb.dataset.arm='1'; rb.textContent='Click again to confirm reset'; setTimeout(()=>{rb.dataset.arm='0'; rb.textContent='Reset all progress';},4000); return; }
+  rb.dataset.arm='0'; rb.textContent='Reset all progress';
+  state.mastery={};
+  state.mockHistory=[];
+  state.labProgress={};
+  state.activeLab=null;
+  await saveProgress();
+  renderSidebar();
+  render();
+});
+document.addEventListener('keydown',(e)=>{
+  if(state.mode!=='study') return;
+  if(e.code==='Space'){ e.preventDefault(); state.flipped=!state.flipped; render(); }
+  else if(e.code==='ArrowRight'){ goNext(); }
+  else if(e.code==='ArrowLeft'){ goPrev(); }
+});
+
+/* ================= INIT ================= */
+function examClosed(){ try{ return !!localStorage.getItem('exam-closed'); }catch(e){ return false; } }
+function showClosed(){
+  document.querySelector('.wrap').innerHTML='<div class="card-panel" style="max-width:520px;margin:12vh auto;text-align:center"><div class="score-big" style="font-size:28px">Exam closed</div><p class="results-sub">Your attempt was submitted on this device and this exam link is now closed. Contact your facilitator for your result or a new session.</p></div>';
+}
+(async function init(){
+  if(examClosed()){ showClosed(); return; }
+  await loadProgress();
+  renderSidebar();
+  buildDeck();
+  render();
+})();
+</script>
+</body></html>
